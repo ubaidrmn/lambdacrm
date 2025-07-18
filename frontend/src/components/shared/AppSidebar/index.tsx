@@ -1,5 +1,4 @@
-import { Calendar, Contact, Home, Inbox, Search, Settings, User } from "lucide-react"
-
+import { Link } from "react-router"
 import {
   Sidebar,
   SidebarContent,
@@ -10,41 +9,24 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import type { SidebarItem } from "@/components/shared/AppSidebar/types"
+import { sidebarItems } from "./constants";
 
-// Menu items.
-const items = [
-  {
-    title: "Leads",
-    url: "/leads",
-    icon: User,
-  },
-  {
-    title: "Contacts",
-    url: "/contacts",
-    icon: Contact,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-]
-
-export function AppSidebar() {
+function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>LambdaCRM</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {sidebarItems.map((item: SidebarItem) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -55,3 +37,5 @@ export function AppSidebar() {
     </Sidebar>
   )
 }
+
+export default AppSidebar;
