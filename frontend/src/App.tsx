@@ -1,14 +1,13 @@
-import DashboardPage from "@/features/dashboard/DashboardPage"
-import { ThemeProvider } from "./components/shared/ThemeProvider"
 import { Route, Routes } from "react-router"
-import { AppLayout } from "./components/shared/AppLayout/AppLayout"
-import LeadsPage from "./features/leads/LeadsPage"
-import ContactsPage from "./features/contacts/ContactsPage"
-import SettingsPage from "./features/settings/SettingsPage"
-import LoginPage from "./features/auth/LoginPage"
+import DashboardPage from "@/features/dashboard/DashboardPage"
+import LeadsPage from "@/features/leads/LeadsPage"
+import ContactsPage from "@/features/contacts/ContactsPage"
+import SettingsPage from "@/features/settings/SettingsPage"
+import LoginPage from "@/features/auth/LoginPage"
+import AppLayout from "@/components/shared/AppLayout"
+import ThemeProvider from "@/components/shared/ThemeProvider"
 
 function App() {
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="lambdacrm-theme">
       <Routes>
@@ -22,4 +21,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
