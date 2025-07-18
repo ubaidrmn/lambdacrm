@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Lead } from "../types";
+import type { Lead } from "./types";
 
 export const leadsDataTableColumns: ColumnDef<Lead>[] = [
     {
