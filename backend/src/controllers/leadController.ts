@@ -4,6 +4,11 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 export default class LeadController {
 
+  static __register = (() => {
+    // This ensures the class gets evaluated when imported
+    return true;
+  })();
+
   @Route({ path: '/leads', method: RouteMethod.GET })
   async create(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     return {

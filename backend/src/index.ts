@@ -1,15 +1,9 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import LeadController from "@/controllers/leadController";
+import "@/controllers/leadController"; // Load all controllers into RouteRegistry.
 import RouteRegistry from "@/lib/routeRegistry";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const routeRegistry = RouteRegistry.getInstance();
-
-    switch (event.path) {
-        case '/leads':
-            new LeadController();
-    }
-
     const handler = routeRegistry.getRouteHandler(event.path, event.httpMethod);
 
     if (handler) {
