@@ -1,4 +1,4 @@
-import { RouteDecoratorOptions, RouteMethod } from "@/types/core";
+import { RouteMethod } from "@/types/core";
 import { Route } from "@/lib/decorators";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 

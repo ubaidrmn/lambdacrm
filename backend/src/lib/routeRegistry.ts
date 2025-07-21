@@ -1,27 +1,39 @@
-import { RouteMethod } from "@/types/core";
+import { RouteHandler } from "@/types/core";
+
 
 export default class RouteRegistry {
-  private static instance: RouteRegistry;
-  private routes: Record<string, Function> = {};
+    /*
+        Singleton for storing registered routes in the app.
+    */
 
-  private constructor() {}
+    private static instance: RouteRegistry;
+    private routeHandlers: Map<string, RouteHandler> = new Map();
 
-  static getInstance(): RouteRegistry {
-    if (!RouteRegistry.instance) {
-      RouteRegistry.instance = new RouteRegistry();
+    private constructor() {}
+
+    static getInstance(): RouteRegistry {
+        if (!RouteRegistry.instance) {
+        RouteRegistry.instance = new RouteRegistry();
+        }
+        return RouteRegistry.instance;
     }
-    return RouteRegistry.instance;
-  }
 
-  addRoute(key: string, handler: Function): void {
-    this.routes[key] = handler;
-  }
+    registerRouteHandler(path: string, method: string, handler: RouteHandler): void {
+        const key = this.constructKey(path, method);
 
-  getRoute(key: string): Function {
-    return this.routes[key];
-  }
+        if (this.routeHandlers.has(key)) {
+            throw new Error(`Route "${key}" is already registered.`);
+        }
 
-  constructKey(path: string, method: string): string {
-    return method.toUpperCase() + '_' + path;
-  }
+        this.routeHandlers.set(key, handler);
+    }
+
+    getRouteHandler(path: string, method: string): RouteHandler | undefined {
+        const key = this.constructKey(path, method);
+        return this.routeHandlers.get(key);
+    }
+
+    private constructKey(path: string, method: string): string {
+        return `${method.toUpperCase()}_${path}`;
+    }
 }

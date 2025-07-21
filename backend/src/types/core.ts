@@ -1,4 +1,6 @@
-export type RouteDecoratorOptions = {
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+
+export interface RouteDecoratorOptions {
     path: string;
     method: RouteMethod;
 };
@@ -10,3 +12,5 @@ export const enum RouteMethod {
   PUT = 'PUT',
   PATCH = 'PATCH'
 };
+
+export type RouteHandler = (event: APIGatewayProxyEvent) => APIGatewayProxyResult;

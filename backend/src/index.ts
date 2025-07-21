@@ -1,8 +1,8 @@
-import { APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import LeadController from "@/controllers/leadController";
 import RouteRegistry from "@/lib/routeRegistry";
 
-export const handler = async (event: any): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const routeRegistry = RouteRegistry.getInstance();
 
     switch (event.path) {
@@ -10,11 +10,10 @@ export const handler = async (event: any): Promise<APIGatewayProxyResult> => {
             new LeadController();
     }
 
-    const key = routeRegistry.constructKey(event.path, event.httpMethod);
-    const handler = routeRegistry.getRoute(key);
+    const handler = routeRegistry.getRouteHandler(event.path, event.httpMethod);
 
     if (handler) {
-        const response = await handler.call(event);
+        const response = await handler(event);
         return response;
     }
 

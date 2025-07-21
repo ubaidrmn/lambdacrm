@@ -1,10 +1,9 @@
-import { RouteDecoratorOptions } from "@/types/core";
+import { RouteDecoratorOptions, RouteHandler } from "@/types/core";
 import RouteRegistry from "@/lib/routeRegistry";
 
 export function Route(options: RouteDecoratorOptions): Function {
-  return function (target: Function) {
+  return function (target: RouteHandler) {
     const registry = RouteRegistry.getInstance();
-    const path = options.method + '_' + options.path
-    registry.addRoute(path, target);
+    registry.registerRouteHandler(options.path, options.method, target);
   }
 }
