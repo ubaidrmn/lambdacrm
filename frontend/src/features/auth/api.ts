@@ -1,7 +1,7 @@
-import { InitiateAuthCommand, CognitoIdentityProviderClient, AuthFlowType, SignUpCommand, ConfirmSignUpCommand, GetUserCommand, GetTokensFromRefreshTokenCommand } from "@aws-sdk/client-cognito-identity-provider"
+import { InitiateAuthCommand, CognitoIdentityProviderClient, AuthFlowType, SignUpCommand, ConfirmSignUpCommand, GetUserCommand, GetTokensFromRefreshTokenCommand, UnauthorizedException, NotAuthorizedException } from "@aws-sdk/client-cognito-identity-provider"
 import type { CognitoUser, ConfirmUserRequestData, GetUserRequestData, LoginUserRequestData, LoginUserResponseData, RefreshTokensRequestData, RefreshTokensResponseData, RegisterUserRequestData } from "./types";
 
-export async function loginUser(data: LoginUserRequestData): Promise<LoginUserResponseData> {
+export async function loginUserApi(data: LoginUserRequestData): Promise<LoginUserResponseData> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
     const command = new InitiateAuthCommand({
         AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
@@ -23,7 +23,7 @@ export async function loginUser(data: LoginUserRequestData): Promise<LoginUserRe
     throw Error("Something went wrong when logging in.")
 }
 
-export async function registerUser(data: RegisterUserRequestData): Promise<CognitoUser> {
+export async function registerUserApi(data: RegisterUserRequestData): Promise<CognitoUser> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
     const command = new SignUpCommand({
         ClientId: import.meta.env.VITE_AWS_COGNITO_APP_CLIENT_ID,
@@ -47,7 +47,7 @@ export async function registerUser(data: RegisterUserRequestData): Promise<Cogni
     throw Error("Something went wrong when creating you account.")
 }
 
-export async function confirmUser(data: ConfirmUserRequestData): Promise<void> {
+export async function confirmUserApi(data: ConfirmUserRequestData): Promise<void> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
     const command = new ConfirmSignUpCommand({
         ClientId: import.meta.env.VITE_AWS_COGNITO_APP_CLIENT_ID,
@@ -57,12 +57,17 @@ export async function confirmUser(data: ConfirmUserRequestData): Promise<void> {
     await client.send(command);
 }
 
-export async function getUser(data: GetUserRequestData): Promise<CognitoUser> {
+export async function getUserApi(data: GetUserRequestData): Promise<CognitoUser> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
     const command = new GetUserCommand({
         AccessToken: data.accessToken
     });
-    const response = await client.send(command);
+
+    const response = await client.send(command).catch(err => {
+        if (err instanceof NotAuthorizedException) {
+            // We have to refresh the access token.
+        }
+    });
 
     return {
         email: "rehmanubaid2003@gmail.com",
@@ -72,8 +77,7 @@ export async function getUser(data: GetUserRequestData): Promise<CognitoUser> {
     }
 }
 
-export async function refreshTokens(data: RefreshTokensRequestData): Promise<RefreshTokensResponseData> {
-    console.log("THIS RAN")
+export async function refreshTokensApi(data: RefreshTokensRequestData): Promise<RefreshTokensResponseData> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
     const command = new GetTokensFromRefreshTokenCommand({
         ClientId: import.meta.env.VITE_AWS_COGNITO_APP_CLIENT_ID,

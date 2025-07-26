@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMutation } from '@tanstack/react-query';
 import AuthContext from '@/components/shared/AuthContext';
-import { confirmUser } from '@/features/auth/api';
+import { confirmUserApi } from '@/features/auth/api';
 import { ConfirmUserSchema } from "@/features/auth/schemas";
 import { toast } from "sonner"
 
@@ -49,7 +49,7 @@ function ConfirmUserPage() {
     });
 
     const confirmUserMutation = useMutation({
-        mutationFn: confirmUser,
+        mutationFn: confirmUserApi,
         onSuccess: () => {
             toast.success("Account created successfuly!", {
                 description: "Login to start using LambdaCRM."

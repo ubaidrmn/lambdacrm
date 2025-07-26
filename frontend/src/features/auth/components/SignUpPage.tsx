@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMutation } from '@tanstack/react-query';
 import AuthContext from '@/components/shared/AuthContext';
-import { registerUser } from '@/features/auth/api';
+import { registerUserApi } from '@/features/auth/api';
 import { SignUpSchema } from "@/features/auth/schemas";
 import { toast } from "sonner"
 
@@ -34,7 +34,7 @@ function SignUpPage() {
     });
 
     const registerUserMutation = useMutation({
-        mutationFn: registerUser,
+        mutationFn: registerUserApi,
         onSuccess: (userInstance) => {
             toast.success("Confirmation code sent", {
                 description: "We've just sent you a confirmation code. Please check your email address.",

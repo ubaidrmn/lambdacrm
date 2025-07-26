@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { LoginSchema } from "@/features/auth/schemas";
-import { loginUser } from '@/features/auth/api';
+import { loginUserApi } from '@/features/auth/api';
 import { useMutation } from '@tanstack/react-query';
 import { useContext } from 'react';
 import AuthContext from '@/components/shared/AuthContext';
@@ -34,7 +34,7 @@ function LoginPage() {
     });
 
     const loginUserMutation = useMutation({
-        mutationFn: loginUser,
+        mutationFn: loginUserApi,
         onSuccess: (response) => {
             toast.success("Logged in successfuly");
             const cookies = new Cookies();
