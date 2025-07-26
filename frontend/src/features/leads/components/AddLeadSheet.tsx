@@ -12,15 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 function AddLeadSheet() {
+
     return (
         <Sheet>
             <SheetTrigger>
-                <Button variant="secondary" size={"sm"}>
-                    <UserPlus />
-                    Add Lead
-                </Button>
+                <UserPlus />
+                Add Lead
             </SheetTrigger>
             <SheetContent>
                 <SheetHeader>
@@ -31,12 +32,29 @@ function AddLeadSheet() {
                 </SheetHeader>
                 <div className="grid flex-1 auto-rows-min gap-6 px-4">
                     <div className="grid gap-3">
-                        <Label htmlFor="add-lead-sheet-name">Name</Label>
-                        <Input id="add-lead-sheet-name" defaultValue="Ubaid" />
+                        <Label>Title</Label>
+                        <Input />
                     </div>
                     <div className="grid gap-3">
-                        <Label htmlFor="add-lead-sheet-email">Email</Label>
-                        <Input id="add-lead-sheet-email" defaultValue="rehmanubaid2003@gmail.com" />
+                        <Label>Expected Amount</Label>
+                        <Input prefix="$" type="number" />
+                    </div>
+                    <div className="grid gap-3">
+                        <Label>Notes</Label>
+                        <Textarea />
+                    </div>
+                    <div className="grid gap-3">
+                        <Label>Status</Label>
+                        <Select>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="NEW">New</SelectItem>
+                            <SelectItem value="CONTACTED">Contacted</SelectItem>
+                            <SelectItem value="QUALIFIED">Qualified</SelectItem>
+                        </SelectContent>
+                        </Select>
                     </div>
                 </div>
                 <SheetFooter>

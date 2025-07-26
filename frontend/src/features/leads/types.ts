@@ -1,5 +1,10 @@
 export type Lead = {
     id: string;
-    contact_id: string;
-    status: string;
+    title: string;
+    contactId: string;
+    status: LeadStatus;
+    expectedAmounnt: number;
+    notes: string;
 }
+
+export type LeadStatus = 'NEW' | 'CONTACTED' | 'QUALIFIED';
