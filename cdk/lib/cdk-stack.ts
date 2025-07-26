@@ -1,9 +1,9 @@
 import * as cdk from 'aws-cdk-lib';
 import * as cognito from "aws-cdk-lib/aws-cognito";
-// import * as lambda from "aws-cdk-lib/aws-lambda";
-// import * as apigw from "aws-cdk-lib/aws-apigateway";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as apigw from "aws-cdk-lib/aws-apigateway";
 
-// import { join } from 'path';
+import { join } from 'path';
 import { Construct } from 'constructs';
 
 export class LambdaCrmCdkStack extends cdk.Stack {
