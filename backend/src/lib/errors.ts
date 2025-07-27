@@ -1,4 +1,4 @@
-export class LambdaCRMAppError extends Error {
+export class AppError extends Error {
     public statusCode;
 
     constructor(message: string = "An error occured", statusCode: number = 500) {

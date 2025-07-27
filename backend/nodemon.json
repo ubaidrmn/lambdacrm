@@ -1,5 +1,5 @@
 {
   "watch": ["src"],
   "ext": "ts",
-  "exec": "npm run build && node dist/src/local-runner.js"
+  "exec": "npm run build && node build/src/local-runner.js"
 }

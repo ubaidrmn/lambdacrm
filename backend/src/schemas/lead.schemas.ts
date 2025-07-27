@@ -1,4 +1,4 @@
-import { LeadStatus } from "@/models/lead.model";
+import { LeadStatus } from "@/types/lead.model";
 import * as z from "zod";
  
 export const CreateLeadRequestBody = z.object({

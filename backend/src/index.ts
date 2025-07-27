@@ -1,63 +1,65 @@
 import "@/controllers/lead.controller"; // Load all controllers into RouteRegistry.
-import RouteRegistry from "@/lib/route-registry";
+import RouteRegistry from "@/lib/route.registry";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as z from "zod"
-import { LambdaCRMAppError } from "./lib/errors";
+import { AppError } from "@/lib/errors";
+import { AppRouteRequest, RouteMethod } from "./types/core";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const rawBody = event.body;
     event.body = JSON.parse(rawBody || "{}");
-
-    const routeRegistry = RouteRegistry.getInstance();
-    const route = routeRegistry.getRoute(event.path, event.httpMethod);
-
-    if (route) {
-        if (event.body) {
-            if (route?.requestBodySchema) {
-                try {
-                    route.requestBodySchema.parse(event.body);
-                } catch (err) {
-                    let errMessage = 'Error validating request body!'
-                    let error = null;
-
-                    if (err instanceof z.ZodError) {
-                        error = err.issues.map(e => ({
-                            field: e.path.join('.'),
-                            message: e.message
-                        }))
-                    }
-
-                    return {
-                        statusCode: 400,
-                        body: JSON.stringify({
-                            message: errMessage,
-                            error
-                        })
-                    };
-                }
-            } 
-        }
-
-        try {
-            const response = await route.handler(event);
-            return response;
-        } catch (error) {
-            if (error instanceof LambdaCRMAppError) {
-                return {
-                    statusCode: error.statusCode,
-                    body: JSON.stringify({
-                        message: error.message,
-                        error: null
-                    })
-                };
-            }
-        }
+    const user = {
+        sub: "12345678"
     }
 
-    return {
-        statusCode: 404,
-        body: JSON.stringify({
-            message: "Route not found!",
-        })
-    };
+    try {
+        const routeRegistry = RouteRegistry.getInstance();
+        const route = routeRegistry.get(event.path, event.httpMethod as RouteMethod);
+
+        if (route?.requestBodySchema) {
+            route.requestBodySchema.parse(event.body);
+        }
+
+        const request: AppRouteRequest = {
+            body: event.body,
+            authenticatedUser: user
+        };
+
+        if (route?.params) {
+            request.params = route.params;
+        }
+
+        const response = await route.handler(request);
+        return response;
+    } catch (err) {
+        if (err instanceof AppError) {
+            return {
+                statusCode: err.statusCode,
+                body: JSON.stringify({
+                    message: err.message,
+                    error: null
+                })
+            };
+        } else if (err instanceof z.ZodError) {
+            let error = err.issues.map(e => ({
+                    field: e.path.join('.'),
+                    message: e.message
+            }))
+            return {
+                statusCode: 400,
+                body: JSON.stringify({
+                    message: "Error parsing request body!",
+                    error
+                })
+            };
+        }
+
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: "An error occured!",
+                error: null
+            })
+        };
+    }
 }

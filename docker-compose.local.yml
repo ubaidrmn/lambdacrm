@@ -1,0 +1,10 @@
+services:
+  db:
+    image: amazon/dynamodb-local
+    ports:
+      - "8000:8000"
+
+  cognito-local:
+    image: jagregory/cognito-local:latest
+    ports:
+      - "9229:9229"

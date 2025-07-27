@@ -1,5 +1,5 @@
 import { type AttributeValue, DynamoDBClient, PutItemCommand, PutItemCommandOutput } from "@aws-sdk/client-dynamodb";
-import { LambdaCRMAppError } from "./errors";
+import { AppError } from "./errors";
 
 export default class LambdaCRMDynamoDBClient {
     private static instance: LambdaCRMDynamoDBClient;
@@ -58,7 +58,7 @@ export default class LambdaCRMDynamoDBClient {
             const response = await this.client.send(command);
             return response;
         } catch (err) {
-            throw new LambdaCRMAppError("Error establishing connection with the database!");
+            throw new AppError("Error establishing connection with the database!");
         }
     }
 }

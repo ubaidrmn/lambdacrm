@@ -1,5 +1,5 @@
-import LambdaCRMDynamoDBClient from "@/lib/dynamo-db-client";
-import { Lead } from "@/models/lead.model";
+import LambdaCRMDynamoDBClient from "@/lib/database";
+import { Lead } from "@/types/lead.model";
 
 export default class LeadRepository {
 
