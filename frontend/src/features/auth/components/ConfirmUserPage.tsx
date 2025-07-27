@@ -23,21 +23,23 @@ function ConfirmUserPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!auth.auth.user) {
+        if (!auth.auth?.verificationEmail || !auth.auth?.verificationRequired || !auth.auth.isAuthenticated) {
+            // Need user's email for verification.
+            // If the user has came directly from the signup page, this will be set.
+
+            // If the user signed up and then went away without verifying, then came back from login page
+            // This will be set in the AuthContextProvider.
             navigate("/signup")
-        }
-        if (auth.auth.user?.verified) {
-            navigate("/dashboard")
         }
     }, [auth.auth.user]);
 
     const formik = useFormik({
         initialValues: { code: '' },
         onSubmit: (values) => {
-            if (auth.auth.user) {
+            if (auth.auth?.verificationEmail) {
                 confirmUserMutation.mutate({ 
                     code: values.code,
-                    email: auth.auth.user.email
+                    email: auth.auth.verificationEmail
                 })
             } else {
                 toast.error("Error", {

@@ -40,9 +40,15 @@ function SignUpPage() {
                 description: "We've just sent you a confirmation code. Please check your email address.",
             });
             auth.setAuth({
-                isAuthenticated: false,
-                user: userInstance
-            });
+                isAuthenticated: true,
+                user: userInstance,
+                verificationRequired: true,
+                loading: false
+            })
+            // auth.setAuth({
+            //     isAuthenticated: false,
+            //     user: userInstance
+            // });
             formik.setSubmitting(false);
             navigate("/signup/confirm")
         },

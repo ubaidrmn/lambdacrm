@@ -1,5 +1,6 @@
-import { InitiateAuthCommand, CognitoIdentityProviderClient, AuthFlowType, SignUpCommand, ConfirmSignUpCommand, GetUserCommand, GetTokensFromRefreshTokenCommand, UnauthorizedException, NotAuthorizedException } from "@aws-sdk/client-cognito-identity-provider"
-import type { CognitoUser, ConfirmUserRequestData, GetUserRequestData, LoginUserRequestData, LoginUserResponseData, RefreshTokensRequestData, RefreshTokensResponseData, RegisterUserRequestData } from "./types";
+import { InitiateAuthCommand, CognitoIdentityProviderClient, AuthFlowType, SignUpCommand, ConfirmSignUpCommand, GetUserCommand, NotAuthorizedException } from "@aws-sdk/client-cognito-identity-provider"
+import type { CognitoUser, ConfirmUserRequestData, GetUserRequestData, LoginUserRequestData, LoginUserResponseData, RefreshTokenRequestData, RefreshTokenResponseData, RegisterUserRequestData } from "./types";
+import TokenService from "@/lib/token-service";
 
 export async function loginUserApi(data: LoginUserRequestData): Promise<LoginUserResponseData> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
@@ -36,12 +37,14 @@ export async function registerUserApi(data: RegisterUserRequestData): Promise<Co
     const result = await client.send(command);
 
     if (result.UserSub) {
-        return {
+        const user: CognitoUser = {
             sub: result.UserSub,
             email: data.email,
             verified: false,
-            fullName: data.fullName,
+            name: data.fullName,
         }
+
+        return user;
     }
 
     throw Error("Something went wrong when creating you account.")
@@ -58,39 +61,59 @@ export async function confirmUserApi(data: ConfirmUserRequestData): Promise<void
 }
 
 export async function getUserApi(data: GetUserRequestData): Promise<CognitoUser> {
+    let response;
+
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
-    const command = new GetUserCommand({
-        AccessToken: data.accessToken
-    });
 
-    const response = await client.send(command).catch(err => {
+    try {
+        const command = new GetUserCommand({
+            AccessToken: data.accessToken
+        });
+        response = await client.send(command);
+    } catch (err) {
         if (err instanceof NotAuthorizedException) {
-            // We have to refresh the access token.
+            const tokenService = TokenService.getInstance();
+            await tokenService.refreshTokens();
+            const command = new GetUserCommand({
+                AccessToken: tokenService.getAccessToken()
+            });
+            response = await client.send(command);
+        } else {
+            throw new Error("Something went wrong..")
         }
-    });
+    };
 
-    return {
-        email: "rehmanubaid2003@gmail.com",
-        fullName: "Ubaid Ur Rehman",
-        sub: "12345678",
-        verified: true,
+    const attributes = Object.fromEntries(
+        (response.UserAttributes || []).map(attr => [attr.Name, attr.Value])
+    );
+
+    const user: CognitoUser = {
+        email: attributes.email,
+        name: attributes.name,
+        sub: attributes.sub,
+        verified: Boolean(attributes.email_verified),
+        picture: attributes.picture
     }
+
+    return user;
 }
 
-export async function refreshTokensApi(data: RefreshTokensRequestData): Promise<RefreshTokensResponseData> {
+export async function refreshTokenApi(data: RefreshTokenRequestData): Promise<RefreshTokenResponseData> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
-    const command = new GetTokensFromRefreshTokenCommand({
+    const command = new InitiateAuthCommand({
         ClientId: import.meta.env.VITE_AWS_COGNITO_APP_CLIENT_ID,
-        RefreshToken: data.refreshToken
+        AuthFlow: 'REFRESH_TOKEN_AUTH',
+        AuthParameters: {
+            REFRESH_TOKEN: data.refreshToken
+        }
     })
     const response = await client.send(command);
 
-    if (response.AuthenticationResult?.AccessToken && response.AuthenticationResult.RefreshToken) {
+    if (response.AuthenticationResult?.AccessToken) {
         return {
-            refreshToken: response.AuthenticationResult.RefreshToken,
             accessToken: response.AuthenticationResult.AccessToken
         }
     }
 
-    throw Error("Something went wrong when refreshing tokens.");
+    throw new Error("Something went wrong when refreshing tokens.");
 }

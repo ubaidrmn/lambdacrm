@@ -14,15 +14,15 @@ import { Label } from "@/components/ui/label"
 import { LoginSchema } from "@/features/auth/schemas";
 import { loginUserApi } from '@/features/auth/api';
 import { useMutation } from '@tanstack/react-query';
+import { Link } from 'react-router';
+import { toast } from 'sonner';
+import TokenService from '@/lib/token-service';
+import { UserNotConfirmedException } from '@aws-sdk/client-cognito-identity-provider';
 import { useContext } from 'react';
 import AuthContext from '@/components/shared/AuthContext';
-import { Link, useNavigate } from 'react-router';
-import { toast } from 'sonner';
-import Cookies from 'universal-cookie';
 
 function LoginPage() {
     const auth = useContext(AuthContext);
-    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: { email: '', password: '' },
@@ -37,20 +37,26 @@ function LoginPage() {
         mutationFn: loginUserApi,
         onSuccess: (response) => {
             toast.success("Logged in successfuly");
-            const cookies = new Cookies();
-            cookies.set('access-token', response.accessToken, { path: '/' });
-            cookies.set('refresh-token', response.refreshToken, { path: '/' });
-            auth.setAuth({
-                isAuthenticated: true,
-                user: null
-            });
+            const tokenService = TokenService.getInstance();
+            // Setting the tokens will automatically re-route the user to dashboard.
+            // setTokens -> Fires AppAuthStateChangeEvent -> Captured by <AuthPage />
+            tokenService.setTokens(response.accessToken, response.refreshToken);
             formik.setSubmitting(false);
-            navigate("/dashboard")
         },
         onError: (error) => {
-            toast.error("Error", {
-                description: error.message,
-            });
+            if (error instanceof UserNotConfirmedException) {
+                auth.setAuth({
+                    verificationRequired: true,
+                    verificationEmail: formik.values.email,
+                    isAuthenticated: true,
+                    loading: false,
+                    user: null
+                });
+            } else {
+                toast.error("Error", {
+                    description: error.message,
+                });
+            }
             formik.setSubmitting(false);
         }
     });

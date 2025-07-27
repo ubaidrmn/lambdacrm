@@ -1,5 +1,6 @@
 import Cookies from "universal-cookie";
-import { jwtDecode } from "jwt-decode";
+import { refreshTokenApi } from "@/features/auth/api";
+import { AppAuthStateChangeEvent } from "./events";
 
 export default class TokenService {
     private static instance: TokenService;
@@ -16,6 +17,9 @@ export default class TokenService {
     setTokens(accessToken: string, refreshToken: string): void {
         this.cookies.set("access-token", accessToken, { path: "/" });
         this.cookies.set("refresh-token", refreshToken, { path: "/" });
+ 
+        // Fire an event notifying that the user has been logged in.
+        document.dispatchEvent(new AppAuthStateChangeEvent({ isAuthenticated: true }));
     }
 
     getAccessToken(): string {
@@ -29,16 +33,20 @@ export default class TokenService {
     deleteTokens(): void {
         this.cookies.remove("access-token");
         this.cookies.remove("refresh-token");
+
+        // Fire an event notifying that the user has been logged out.
+        document.dispatchEvent(new AppAuthStateChangeEvent({ isAuthenticated: false }));
     }
 
-    isAccessTokenExpired(): boolean {
-        const tokenExpirationTimestamp = jwtDecode(this.getAccessToken()).exp;
+    async refreshTokens(): Promise<void> {
+        const refreshToken = this.getRefreshToken();
 
-        if (tokenExpirationTimestamp) {
-            return Date.now() > (tokenExpirationTimestamp * 1000)
+        try {
+            const result = await refreshTokenApi({ refreshToken: refreshToken });
+            this.setTokens(result.accessToken, refreshToken);
+        } catch (err) {
+            this.deleteTokens();
         }
-
-        return false;
     }
 
 }
