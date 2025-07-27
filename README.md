@@ -2,7 +2,7 @@
 
 A lightweight serverless CRM built on AWS Lambda, API Gateway, and DynamoDB. This project consists of a TypeScript backend with an AWS Lambda function, a React frontend with modern UI components, and AWS CDK for infrastructure as code.
 
-This project is still under development so this document may not be updated to reflect the most recent changes.
+*This project is still under development so this document may not be updated to reflect the most recent changes.*
 
 ## 🏗️ Architecture
 
