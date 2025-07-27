@@ -12,7 +12,12 @@ export class LambdaCrmCdkStack extends cdk.Stack {
 
     const pool = new cognito.UserPool(this, 'MainUserPool', {
       userPoolName: 'MainUserPool',
-      
+      // userVerification: {
+      //   emailSubject: 'Verify your email',
+      //   emailBody: 'Your code is {####}',
+      //   emailStyle: cognito.VerificationEmailStyle.CODE,
+      //   // This sets the expiration time (between 1 and 7 days)
+      // },
       standardAttributes: {
         email: {
           required: true,
@@ -50,7 +55,7 @@ export class LambdaCrmCdkStack extends cdk.Stack {
     });
 
     const mainLambda = new lambda.Function(this, 'MainLambda', {
-      code: lambda.Code.fromAsset(join(__dirname, '../../backend/dist/src')),
+      code: lambda.Code.fromAsset(join(__dirname, '../../backend/build/src')),
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: 'index.handler',
     });
