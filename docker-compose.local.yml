@@ -1,10 +1,20 @@
 services:
-  db:
-    image: amazon/dynamodb-local
+  dynamodb-local:
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath ./data
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
     ports:
-      - "8000:8000"
+      - 8000:8000
+    volumes:
+      - dynamo_data:/home/dynamodblocal/data
+    working_dir: /home/dynamodblocal
+    user: root
 
-  cognito-local:
-    image: jagregory/cognito-local:latest
-    ports:
-      - "9229:9229"
+  # cognito-local:
+  #   image: jagregory/cognito-local:latest
+  #   ports:
+  #     - "9229:9229"
+
+
+volumes:
+  dynamo_data:
