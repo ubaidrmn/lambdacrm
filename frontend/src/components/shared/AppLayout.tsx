@@ -10,11 +10,9 @@ function AppLayout (props: AppLayoutProps) {
     return (
         <SidebarProvider>
         <AppSidebar />
-            <main>
-                <div className="p-4">
-                    {props.children}
-                </div>
-            </main>
+            <div className="p-4 max-w-full w-full">
+                {props.children}
+            </div>
         </SidebarProvider>
     )
 }
