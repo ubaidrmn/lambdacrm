@@ -1,13 +1,13 @@
-import { Project } from "@/types/project.model";
-import UserRepository from "@/repositories/user.repository";
+import { Organization } from "@/types/organization.model";
 import { User } from '@/types/user.model';
+import OrganizationRepository from "@/repositories/organization.repository";
 
 export default class UserService {
 
-    async getUserProjects(user: User): Promise<Project[]> {
-        const userRepository = new UserRepository();
-        const projects = await userRepository.findProjectsByUser(user);
-        return projects;
+    async getUserOrganizations(user: User): Promise<Organization[]> {
+        const organizationRepository = new OrganizationRepository();
+        const organizations = await organizationRepository.findOrganizationsByUser(user);
+        return organizations;
     }
 
 }

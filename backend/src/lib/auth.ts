@@ -11,15 +11,13 @@ import { User } from "@/types/user.model";
  */
 export async function getAuthenticatedUser(sub: string): Promise<User> {
   const userRepository = new UserRepository();
-  const PK = sub;
-  const SK = "META";
 
   try {
-    return await userRepository.get(PK, SK);
+    return await userRepository.findUserBySub(sub);
   } catch (err) {
 
     if (err instanceof UserNotFoundError) {
-      return await userRepository.create(PK, SK);
+      return await userRepository.createUser(sub);
     }
 
     throw new AppError("An error occurred while retrieving user details");

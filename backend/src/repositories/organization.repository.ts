@@ -7,11 +7,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default class OrganizationRepository {
 
-  async createOrganization(organization: CreateOrganizationRepositoryInput): Promise<Organization> {
+  async createOrganization(organizationData: CreateOrganizationRepositoryInput): Promise<Organization> {
     const db = LambdaCRMDatabase.getInstance();
 
-    const _organization: Organization = {
-      ...organization,
+    const organization: Organization = {
+      ...organizationData,
       PK: `ORGANIZATION_${uuidv4()}`,
       SK: "META"
     };
@@ -22,10 +22,10 @@ export default class OrganizationRepository {
           Put: {
             TableName: db.tableName,
             Item: {
-              PK: { S: _organization.PK },
-              SK: { S: _organization.SK },
-              title: { S: _organization.title },
-              creatorID: { S: _organization.creatorID }
+              PK: { S: organization.PK },
+              SK: { S: organization.SK },
+              title: { S: organization.title },
+              creatorID: { S: organization.creatorID }
             }
           }
         },
@@ -33,8 +33,8 @@ export default class OrganizationRepository {
           Put: {
             TableName: db.tableName,
             Item: {
-              PK: { S: organization.creatorID },
-              SK: { S: _organization.PK }
+              PK: { S: organizationData.creatorID },
+              SK: { S: organization.PK }
             }
           }
         },
@@ -42,8 +42,8 @@ export default class OrganizationRepository {
           Put: {
             TableName: db.tableName,
             Item: {
-              PK: { S: _organization.PK },
-              SK: { S: organization.creatorID }
+              PK: { S: organization.PK },
+              SK: { S: organizationData.creatorID }
             }
           }
         }
@@ -51,7 +51,7 @@ export default class OrganizationRepository {
     });
 
     await db.client.send(transactCommand);
-    return _organization;
+    return organization;
   }
 
   async findOrganizationsByUser(user: User): Promise<Organization[]> {

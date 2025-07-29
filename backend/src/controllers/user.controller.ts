@@ -9,21 +9,20 @@ import UserService from "@/services/user.service";
 export default class UserController {
 
     @RegisterRoute({ 
-        pattern: RegExp(`^/users/(?<id>${UUID_REGEX})/projects/?$`), 
-        method: RouteMethod.GET, 
-        requestBodySchema: CreateLeadRequestBody 
+        pattern: RegExp(`^/users/(?<id>${UUID_REGEX})/organizations/?$`), 
+        method: RouteMethod.GET
     })
-    async getUserProjects(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
+    async getUserOrganizations(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
         const userService = new UserService();
-        const projects = userService.getUserProjects(request.authenticatedUser);
+        const orgs = await userService.getUserOrganizations(request.authenticatedUser);
 
         return {
-        statusCode: 200,
-        body: JSON.stringify({
-            data: {
-                projects: projects
-            }
-        })
+            statusCode: 200,
+            body: JSON.stringify({
+                data: {
+                    organizations: orgs
+                }
+            })
         }
     };
 

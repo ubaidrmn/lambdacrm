@@ -24,11 +24,11 @@ export type RouteHandler = (request: AppRouteRequest) => APIGatewayProxyResult;
 
 export interface AppRoute extends RegisterRouteOptions { 
   handler: RouteHandler; 
-  params?: Record<string, string | number>
+  params?: Record<string, string>
 }
 
 export interface AppRouteRequest {
   body: string | null,
-  params?: Record<string, string | number>
+  params?: Record<string, string>
   authenticatedUser: User
 }

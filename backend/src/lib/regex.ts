@@ -1,1 +1,1 @@
-export const UUID_REGEX = "[a-zA-Z0-9-]+";
+export const UUID_REGEX = "[a-zA-Z0-9_-]+";

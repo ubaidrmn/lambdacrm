@@ -7,3 +7,5 @@ export class AppError extends Error {
         this.name = this.constructor.name;
     }
 }
+
+export class UserNotFoundError extends Error {}

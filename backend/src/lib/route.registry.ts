@@ -23,7 +23,8 @@ export default class RouteRegistry {
         this.routes.push({
             pattern: options.pattern,
             method: options.method,
-            handler: handler
+            handler: handler,
+            requestBodySchema: options.requestBodySchema
         })
     }
 
@@ -47,15 +48,5 @@ export default class RouteRegistry {
         if (route) { return route; }
 
         throw new AppError("Route not found!")
-    }
-
-    // getRoute(path: string, method: string): { handler: RouteHandler, requestBodySchema?: z.ZodObject } | undefined {
-    //     const key = this.constructKey(path, method);
-    //     const route = this.registry.get(key);
-    //     return route;
-    // }
-
-    private constructKey(path: string, method: string): string {
-        return `${method.toUpperCase()}_${path}`;
     }
 }

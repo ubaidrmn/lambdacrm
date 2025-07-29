@@ -14,7 +14,7 @@ export default class OrganizationController {
         method: RouteMethod.POST, 
         requestBodySchema: CreateOrganizationRequestBody 
     })
-    async create(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
+    async createOrganization(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
         const body = request.body as unknown as CreateOrganizationRequestBodyType;
         const service = new OrganizationService();
         const org = await service.createOrganization(body, request.authenticatedUser);

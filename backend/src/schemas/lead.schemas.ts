@@ -2,6 +2,7 @@ import { LeadStatus } from "@/types/lead.model";
 import * as z from "zod";
  
 export const CreateLeadRequestBody = z.object({
+  organizationID: z.string(),
   title: z.string(),
   notes: z.string().nullable(),
   expectedAmount: z.number().nullable(),

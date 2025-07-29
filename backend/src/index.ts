@@ -1,21 +1,24 @@
 import "@/controllers/lead.controller"; // Load all controllers into RouteRegistry.
+import "@/controllers/user.controller";
+import "@/controllers/organization.controller";
 import RouteRegistry from "@/lib/route.registry";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as z from "zod"
 import { AppError } from "@/lib/errors";
 import { AppRouteRequest, RouteMethod } from "./types/core";
+import { getAuthenticatedUser } from "./lib/auth";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const rawBody = event.body;
     event.body = JSON.parse(rawBody || "{}");
-    const user = {
-        sub: "12345678"
-    }
 
     try {
+        const sub = "12345678" // Later, get this from the acess token in event headers, validate it in API Gateway.
+        const user = await getAuthenticatedUser(sub);
+
         const routeRegistry = RouteRegistry.getInstance();
         const route = routeRegistry.get(event.path, event.httpMethod as RouteMethod);
-
+        console.log(route.pattern)
         if (route?.requestBodySchema) {
             route.requestBodySchema.parse(event.body);
         }
