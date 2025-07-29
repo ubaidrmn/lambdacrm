@@ -43,6 +43,7 @@ function SignUpPage() {
                 isAuthenticated: true,
                 user: userInstance,
                 verificationRequired: true,
+                verificationEmail: formik.values.email,
                 loading: false
             })
             // auth.setAuth({

@@ -3,7 +3,7 @@ export type Lead = {
     title: string;
     contactId: string;
     status: LeadStatus;
-    expectedAmounnt: number;
+    expectedAmount: number;
     notes: string;
 }
 
