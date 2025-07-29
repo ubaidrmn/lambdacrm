@@ -8,7 +8,6 @@ export default class LeadService {
 
     async createLead(data: CreateLeadRequestBodyType, user: User): Promise<Lead> {
         const leadRepository = new LeadRepository();
-
         const lead = await leadRepository.createLead({
             userID: user.PK,
             organizationID: data.organizationID,
@@ -20,6 +19,12 @@ export default class LeadService {
             },            
         })
         return lead;
+    }
+
+    async getLeadsByOrganization(organizationID: string): Promise<Lead[]> {
+        const leadRepository = new LeadRepository();
+        const leads = await leadRepository.getLeadsByOrganization(organizationID);
+        return leads;
     }
 
 }
