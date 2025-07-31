@@ -8,9 +8,11 @@
     "dev": "nodemon"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.857.0",
     "@aws-sdk/client-dynamodb": "^3.0.0",
     "@aws-sdk/lib-dynamodb": "^3.0.0",
     "@types/uuid": "^10.0.0",
+    "jwt-decode": "^4.0.0",
     "uuid": "^11.1.0",
     "zod": "^4.0.5"
   },

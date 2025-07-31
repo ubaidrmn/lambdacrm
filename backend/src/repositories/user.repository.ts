@@ -4,17 +4,16 @@ import { OrganizationMember } from "@/types/organization.model";
 import { User } from "@/types/user.model";
 import { AttributeValue, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { BatchGetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 export default class UserRepository {
 
-  async findUserBySub(sub: string): Promise<User> {
+  async findById(id: string): Promise<User> {
     const db = LambdaCRMDatabase.getInstance();
 
     const command = new GetItemCommand({
       TableName: db.tableName,
       Key: {
-        PK: { S: `USER_${sub}` },
+        PK: { S: id },
         SK: { S: "META" },
       }
     });
@@ -22,23 +21,47 @@ export default class UserRepository {
     const response = await db.client.send(command);
 
     if (response.Item) {
-        const user = unmarshall(response.Item) as User;
-        return user;
+      const user: User = {
+        email: response.Item?.email.S!,
+        id: response.Item?.PK.S!,
+        name: response.Item?.name.S!,
+        verified: response.Item?.verified.BOOL!,
+        picture: response.Item?.picture?.S || undefined,
+      }
+
+      return user;
     }
 
     throw new UserNotFoundError("User not found!");
   }
 
-  async createUser(sub: string): Promise<User> {
+  async create(input: {
+    sub: string;
+    email: string;
+    name: string;
+    verified: boolean;
+    picture?: string;
+  }): Promise<User> {
     const db = LambdaCRMDatabase.getInstance();
+
     const user: User = {
-      PK: `USER_${sub}`,
-      SK: "META"
+      id: `USER_${input.sub}`,
+      email: input.email,
+      name: input.name,
+      verified: input.verified,
+      picture: input.picture
     }
 
     const item: Record<string, AttributeValue> = {
-      PK: { S: user.PK },
-      SK: { S: user.SK },
+      PK: { S: user.id },
+      SK: { S: "META" },
+      email: { S: user.email },
+      name: { S: user.name },
+      verified: { BOOL: user.verified },
+    }
+
+    if (user.picture) {
+      item["picture"] = { S: user.picture };
     }
 
     const command = new PutItemCommand({
@@ -51,27 +74,11 @@ export default class UserRepository {
     return user;
   }
 
-  async findUsersByOrganizationID(organizationID: string): Promise<User[]> {
+  async findManyByIds(ids: string[]): Promise<User[]> {
     const db = LambdaCRMDatabase.getInstance();
 
-    const command = new QueryCommand({
-      TableName: db.tableName,
-      KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
-      ExpressionAttributeValues: {
-        ":pk": organizationID,
-        ":skPrefix": "USER_",
-      },
-    });
-
-    const organizationMembersResponse = await db.client.send(command);
-    const organizationMembers = organizationMembersResponse.Items as unknown as OrganizationMember[];
-
-    if (!organizationMembers || organizationMembers.length === 0) {
-      return [];
-    }
-
-    const userKeys = organizationMembers.map((om) => ({
-      PK: om.SK,
+    const userKeys = ids.map((id) => ({
+      PK: id,
       SK: "META",
     }));
 
@@ -86,6 +93,12 @@ export default class UserRepository {
     const batchResponse = await db.client.send(batchCommand);
     const users = batchResponse.Responses?.[db.tableName] ?? [];
 
-    return users as User[];
+    return users.map(user => ({
+      id: user.PK,
+      email: user.email,
+      name: user.name,
+      verified: user.verified,
+      picture: user.picture || undefined,
+    })) as User[];
   }
 }
