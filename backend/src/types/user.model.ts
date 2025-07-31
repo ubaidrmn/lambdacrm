@@ -7,8 +7,11 @@ import { OrganizationRole } from "./organization.model";
  * Each Cognito user has a one-to-one mapping with a User entity stored in the DynamoDB table.
  */
 export interface User {
-  PK: string; // e.g., "USER_<SUB>"
-  SK: string; // e.g., "META"
+  id: string; // e.g., "USER_<SUB>"
+  email: string;
+  name: string;
+  verified: boolean;
+  picture?: string;
 }
 
 /**
@@ -19,7 +22,7 @@ export interface User {
  * This complements the OrganizationMember entity and avoids the need for a GSI.
  */
 export interface UserOrganization {
-  PK: string; // e.g., "USER_<SUB>"
-  SK: string; // e.g., "ORGANIZATION_123"
+  userId: string; // (PK) => e.g., "USER_<SUB>"
+  organizationId: string; // (SK) => e.g., "ORGANIZATION_123"
   role: OrganizationRole;
 }

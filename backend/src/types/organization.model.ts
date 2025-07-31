@@ -4,15 +4,9 @@
  * Stored as a top-level entity.
  */
 export interface Organization {
-  PK: string; // e.g., organization_123
-  SK: string; // e.g., META
+  id: string; // e.g., organization_123
   title: string;
-  creatorID: string; // e.g., USER_<SUB>
-}
-
-export interface CreateOrganizationRepositoryInput {
-  title: string;
-  creatorID: string;
+  creatorId: string; // e.g., USER_<SUB>
 }
 
 /*
@@ -27,8 +21,8 @@ export interface CreateOrganizationRepositoryInput {
  * this is the way to go.
  */
 export interface OrganizationMember {
-  PK: string; // e.g., organization_123
-  SK: string; // e.g., USER_<SUB>
+  organizationId: string; // (PK) => e.g., organization_123
+  memberId: string; // (SK) =>  e.g., USER_<SUB>
   role: OrganizationRole; // e.g., ADMIN
 }
 
@@ -36,6 +30,7 @@ export interface OrganizationMember {
  * Represents a role a user can have within an organization.
  */
 export const enum OrganizationRole {
+  OWNER = "OWNER",
   ADMIN = 'ADMIN',
   EMPLOYEE = 'EMPLOYEE'
 }
