@@ -1,6 +1,6 @@
 import { Lead, LeadStatus } from "@/types/lead.model";
 import LeadRepository from "@/repositories/lead.repository";
-import { CreateLeadRequestBodyType } from "@/schemas/lead.schemas";
+import { CreateLeadRequestBodyType, UpdateLeadRequestBodyType } from "@/schemas/lead.schemas";
 import { v4 as uuidv4 } from 'uuid';
 import { User } from "@/types/user.model";
 
@@ -25,6 +25,12 @@ export default class LeadService {
         const leadRepository = new LeadRepository();
         const leads = await leadRepository.getLeadsByOrganization(organizationID);
         return leads;
+    }
+
+    async updateLead(organizationID: string, leadID: string, data: UpdateLeadRequestBodyType): Promise<Lead> {
+        const leadRepository = new LeadRepository();
+        const lead = await leadRepository.updateLead(organizationID, leadID, data);
+        return lead;
     }
 
 }

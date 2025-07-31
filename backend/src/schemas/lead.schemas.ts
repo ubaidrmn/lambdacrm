@@ -10,3 +10,12 @@ export const CreateLeadRequestBody = z.object({
 });
 
 export type CreateLeadRequestBodyType = z.infer<typeof CreateLeadRequestBody>;
+
+export const UpdateLeadRequestBody = z.object({
+  title: z.string().optional(),
+  notes: z.string().nullable().optional(),
+  expectedAmount: z.number().nullable().optional(),
+  status: z.enum([LeadStatus.NEW, LeadStatus.CONTACTED, LeadStatus.QUALIFIED]).optional()
+});
+
+export type UpdateLeadRequestBodyType = z.infer<typeof UpdateLeadRequestBody>;
