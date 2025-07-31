@@ -16,7 +16,15 @@ export default class LeadController {
   async createLead(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
     const data = request.body as unknown as CreateLeadRequestBodyType // We can safely rely on this.
     const leadService = new LeadService();
-    const lead = await leadService.createLead(data, request.authenticatedUser);
+    const lead = await leadService.createLead({
+      creatorId: request.authenticatedUser.id,
+      organizationId: data.organizationId,
+      title: data.title,
+      notes: data.notes || undefined,
+      expectedAmount: data.expectedAmount || undefined,
+      status: data.status
+    });
+
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -29,11 +37,11 @@ export default class LeadController {
     pattern: RegExp(`^/organizations/(?<organization_id>${UUID_REGEX})/leads/?$`), 
     method: RouteMethod.GET 
   })
-  async getLeadsByOrganization(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
+  async getOrganizationLeads(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
 
     if (!request?.params?.organization_id) { throw new AppError("Organization ID is required!"); };
     const leadService = new LeadService();
-    const leads = await leadService.getLeadsByOrganization(request?.params?.organization_id);
+    const leads = await leadService.getOrganizationLeads(request?.params?.organization_id);
 
     return {
       statusCode: 200,
@@ -54,11 +62,14 @@ export default class LeadController {
 
     const data = request.body as unknown as UpdateLeadRequestBodyType;
     const leadService = new LeadService();
-    const lead = await leadService.updateLead(
-      request.params.organization_id, 
-      request.params.lead_id, 
-      data, 
-    );
+    const lead = await leadService.updateLead({
+      id: request.params.lead_id,
+      organizationId: request.params.organization_id,
+      title: data.title || undefined,
+      status: data.status || undefined,
+      notes: data.notes || undefined,
+      expectedAmount: data.expectedAmount || undefined
+    });
 
     return {
       statusCode: 200,
@@ -67,5 +78,4 @@ export default class LeadController {
       })
     }
   };
-
 }

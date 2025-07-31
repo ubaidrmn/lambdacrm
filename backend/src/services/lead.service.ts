@@ -1,35 +1,38 @@
 import { Lead, LeadStatus } from "@/types/lead.model";
 import LeadRepository from "@/repositories/lead.repository";
-import { CreateLeadRequestBodyType, UpdateLeadRequestBodyType } from "@/schemas/lead.schemas";
-import { v4 as uuidv4 } from 'uuid';
-import { User } from "@/types/user.model";
 
 export default class LeadService {
 
-    async createLead(data: CreateLeadRequestBodyType, user: User): Promise<Lead> {
+    async createLead(input: {
+        organizationId: string;
+        creatorId: string;
+        title: string;
+        notes?: string;
+        expectedAmount?: number;
+        status: LeadStatus;
+    }): Promise<Lead> {
         const leadRepository = new LeadRepository();
-        const lead = await leadRepository.createLead({
-            userID: user.PK,
-            organizationID: data.organizationID,
-            data: {
-                title: data.title,
-                status: data.status,
-                expectedAmount: data?.expectedAmount || undefined,
-                notes: data?.notes || undefined
-            },            
-        })
+        const lead = await leadRepository.create(input);
         return lead;
     }
 
-    async getLeadsByOrganization(organizationID: string): Promise<Lead[]> {
+    async getOrganizationLeads(organizationId: string): Promise<Lead[]> {
         const leadRepository = new LeadRepository();
-        const leads = await leadRepository.getLeadsByOrganization(organizationID);
+        const leads = await leadRepository.findManyByOrganizationId(organizationId);
+        console.log(leads)
         return leads;
     }
 
-    async updateLead(organizationID: string, leadID: string, data: UpdateLeadRequestBodyType): Promise<Lead> {
+    async updateLead(input: {
+        id: string;
+        organizationId: string;
+        title?: string;
+        status?: string;
+        notes?: string;
+        expectedAmount?: number
+    }): Promise<Lead> {
         const leadRepository = new LeadRepository();
-        const lead = await leadRepository.updateLead(organizationID, leadID, data);
+        const lead = await leadRepository.updateLead(input);
         return lead;
     }
 

@@ -1,24 +1,29 @@
+import OrganizationMemberRepository from "@/repositories/organization-member.repository";
 import OrganizationRepository from "@/repositories/organization.repository";
 import UserRepository from "@/repositories/user.repository";
-import { CreateOrganizationRequestBodyType } from "@/schemas/organization.schemas";
 import { Organization } from "@/types/organization.model";
 import { User } from "@/types/user.model";
 
 export default class OrganizationService {
 
-    async createOrganization(data: CreateOrganizationRequestBodyType, user: User): Promise<Organization> {
-        const repository = new OrganizationRepository();
-        const org = await repository.createOrganization({ 
-            title: data.title, 
-            creatorID: user.PK 
+    async createOrganization(input: {
+        title: string;
+        userId: string
+    }): Promise<Organization> {
+        const orgRepository = new OrganizationRepository();
+        const org = await orgRepository.create({ 
+            title: input.title, 
+            creatorId: input.userId
         });
 
         return org;
     }
 
-    async getOrganizationUsers(organizationID: string): Promise<User[]> {
-        const repository = new UserRepository();
-        const users = await repository.findUsersByOrganizationID(organizationID);
+    async getOrganizationUsers(organizationId: string): Promise<User[]> {
+        const orgRepository = new OrganizationMemberRepository();
+        const userRepository = new UserRepository();
+        const organizationMembers = await orgRepository.findManyByOrganizationId(organizationId);
+        const users = await userRepository.findManyByIds(organizationMembers.map(om => om.userId));
         return users;
     }
 

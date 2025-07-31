@@ -16,15 +16,16 @@ export default class OrganizationController {
     })
     async createOrganization(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
         const body = request.body as unknown as CreateOrganizationRequestBodyType;
-        const service = new OrganizationService();
-        const org = await service.createOrganization(body, request.authenticatedUser);
+        const orgService = new OrganizationService();
+        const org = await orgService.createOrganization({
+            title: body.title,
+            userId: request.authenticatedUser.id
+        });
 
         return {
             statusCode: 200,
             body: JSON.stringify({
-                data: {
-                    organization: org
-                }
+                data: org
             })
         }
     };
@@ -35,18 +36,32 @@ export default class OrganizationController {
         requestBodySchema: CreateOrganizationRequestBody 
     })
     async getOrganizationUsers(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
-        const service = new OrganizationService();
-        
+        const orgService = new OrganizationService();
+
         if (!request?.params?.id) { throw new AppError("Organization ID is required!"); };
 
-        const users = await service.getOrganizationUsers(request?.params?.id);
+        const users = await orgService.getOrganizationUsers(request?.params?.id);
 
         return {
             statusCode: 200,
             body: JSON.stringify({
-                data: {
-                    users: users
-                }
+                data: users
+            })
+        }
+    };
+
+    @RegisterRoute({ 
+        pattern: RegExp(`^/organizations/?$`), 
+        method: RouteMethod.GET
+    })
+    async getUserOrganizations(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
+        const userService = new UserService();
+        const orgs = await userService.getUserOrganizations(request.authenticatedUser.id);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                data: orgs
             })
         }
     };
