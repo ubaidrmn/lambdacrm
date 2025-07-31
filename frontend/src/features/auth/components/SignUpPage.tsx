@@ -14,10 +14,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMutation } from '@tanstack/react-query';
-import AuthContext from '@/components/shared/AuthContext';
+import AuthContext from '@/features/auth/context';
 import { registerUserApi } from '@/features/auth/api';
 import { SignUpSchema } from "@/features/auth/schemas";
 import { toast } from "sonner"
+import WebNavbar from '@/components/shared/WebNavbar';
 
 function SignUpPage() {
     const auth = useContext(AuthContext);
@@ -62,7 +63,9 @@ function SignUpPage() {
     });
 
     return (
-        <div className="flex items-center justify-center h-screen">
+        <>
+        <WebNavbar />
+        <div className="flex items-center justify-center h-screen -mt-[80px]">
             <form className="w-full max-w-sm" onSubmit={formik.handleSubmit}>
                 <Card className="w-full max-w-sm">
                     <CardHeader>
@@ -117,6 +120,7 @@ function SignUpPage() {
                 </Card>
             </form>
         </div>
+        </>
     );
 }
 

@@ -19,7 +19,8 @@ import { toast } from 'sonner';
 import TokenService from '@/lib/token-service';
 import { UserNotConfirmedException } from '@aws-sdk/client-cognito-identity-provider';
 import { useContext } from 'react';
-import AuthContext from '@/components/shared/AuthContext';
+import AuthContext from '@/features/auth/context';
+import WebNavbar from '@/components/shared/WebNavbar';
 
 function LoginPage() {
     const auth = useContext(AuthContext);
@@ -62,7 +63,9 @@ function LoginPage() {
     });
 
     return (
-        <div className="flex items-center justify-center h-screen">
+        <>
+        <WebNavbar />
+        <div className="flex items-center justify-center h-screen -mt-[80px]">
             <form className="w-full max-w-sm" onSubmit={formik.handleSubmit}>
                 <Card className="w-full max-w-sm">
                     <CardHeader>
@@ -111,6 +114,7 @@ function LoginPage() {
                 </Card>
             </form>
         </div>
+        </>
     );
 }
 

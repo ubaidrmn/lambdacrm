@@ -1,25 +1,25 @@
 import type { SidebarItem } from "./types";
-import { Contact, Home, Settings, User } from "lucide-react"
+import { Building2, ChevronsUp, Contact, Home } from "lucide-react"
 
-export const sidebarItems: SidebarItem[] = [
+export const getSidebarItems = (params: any): SidebarItem[] => [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: `/app/organizations/${params.organizationID}/dashboard`,
       icon: Home,
     },
     {
+      title: "Companies",
+      url: `/app/organizations/${params.organizationID}/leads`,
+      icon: Building2,
+    },
+    {
       title: "Leads",
-      url: "/leads",
-      icon: User,
+      url: `/app/organizations/${params.organizationID}/leads`,
+      icon: ChevronsUp,
     },
     {
       title: "Contacts",
-      url: "/contacts",
+      url: `/app/organizations/${params.organizationID}/contacts`,
       icon: Contact,
-    },
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
     },
 ];
