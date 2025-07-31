@@ -1,8 +1,8 @@
-import type { CognitoUser } from "@/features/auth/types";
+import type { User } from "./user.model";
 
 export type AuthContextValueType = {
     isAuthenticated: boolean;
-    user: CognitoUser | null;
+    user: User | null;
     loading: boolean;
     verificationRequired?: boolean;
     verificationEmail?: string;

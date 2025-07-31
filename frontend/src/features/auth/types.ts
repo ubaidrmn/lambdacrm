@@ -19,18 +19,6 @@ export type LoginUserResponseData = {
     refreshToken: string;
 };
 
-export type CognitoUser = {
-    email: string;
-    name: string;
-    sub: string;
-    verified: boolean;
-    picture?: string;
-};
-
-export type GetUserRequestData = {
-    accessToken: string;
-}
-
 export type RefreshTokenRequestData = {
     refreshToken: string;
 }

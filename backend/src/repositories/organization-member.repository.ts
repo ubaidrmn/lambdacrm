@@ -1,10 +1,10 @@
 import LambdaCRMDatabase from "@/lib/database";
-import { UserOrganization } from "@/types/user.model";
+import { OrganizationMember } from "@/types/organization.model";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 export default class OrganizationMemberRepository {
 
-  async findManyByOrganizationId(organizationId: string): Promise<UserOrganization[]> {
+  async findManyByOrganizationId(organizationId: string): Promise<OrganizationMember[]> {
     const db = LambdaCRMDatabase.getInstance();
 
     const command = new QueryCommand({
@@ -25,7 +25,7 @@ export default class OrganizationMemberRepository {
 
     return organizationMembers.map(orgMember => {
       return {
-        userId: orgMember.SK,
+        memberId: orgMember.SK,
         organizationId: orgMember.PK,
         role: orgMember.role
       }

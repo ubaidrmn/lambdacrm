@@ -1,3 +1,6 @@
+import { Organization } from "./organization.model";
+import { User } from "./user.model";
+
 /**
  * Represents a lead associated with a specific organization.
  *
@@ -13,6 +16,10 @@ export interface Lead {
   notes?: string;
   expectedAmount?: number;
   status: LeadStatus;
+
+  // Note: These are not stored in the entity itself, but are populated after fetching for easier access.
+  creator?: User;
+  organization?: Organization;
 }
 
 /**

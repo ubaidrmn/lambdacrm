@@ -1,6 +1,7 @@
-import { InitiateAuthCommand, CognitoIdentityProviderClient, AuthFlowType, SignUpCommand, ConfirmSignUpCommand, GetUserCommand, NotAuthorizedException } from "@aws-sdk/client-cognito-identity-provider"
-import type { CognitoUser, ConfirmUserRequestData, GetUserRequestData, LoginUserRequestData, LoginUserResponseData, RefreshTokenRequestData, RefreshTokenResponseData, RegisterUserRequestData } from "./types";
-import TokenService from "@/lib/token-service";
+import { InitiateAuthCommand, CognitoIdentityProviderClient, AuthFlowType, SignUpCommand, ConfirmSignUpCommand } from "@aws-sdk/client-cognito-identity-provider"
+import { apiClient } from "@/lib/api-client";
+import type { ConfirmUserRequestData, LoginUserRequestData, LoginUserResponseData, RefreshTokenRequestData, RefreshTokenResponseData, RegisterUserRequestData } from "./types";
+import type { User } from "@/types/user.model";
 
 export async function loginUserApi(data: LoginUserRequestData): Promise<LoginUserResponseData> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
@@ -24,7 +25,7 @@ export async function loginUserApi(data: LoginUserRequestData): Promise<LoginUse
     throw Error("Something went wrong when logging in.")
 }
 
-export async function registerUserApi(data: RegisterUserRequestData): Promise<CognitoUser> {
+export async function registerUserApi(data: RegisterUserRequestData): Promise<User> {
     const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
     const command = new SignUpCommand({
         ClientId: import.meta.env.VITE_AWS_COGNITO_APP_CLIENT_ID,
@@ -37,8 +38,8 @@ export async function registerUserApi(data: RegisterUserRequestData): Promise<Co
     const result = await client.send(command);
 
     if (result.UserSub) {
-        const user: CognitoUser = {
-            sub: result.UserSub,
+        const user: User = {
+            id: `USER_${result.UserSub}`,
             email: data.email,
             verified: false,
             name: data.fullName,
@@ -60,42 +61,10 @@ export async function confirmUserApi(data: ConfirmUserRequestData): Promise<void
     await client.send(command);
 }
 
-export async function getUserApi(data: GetUserRequestData): Promise<CognitoUser> {
-    let response;
-
-    const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
-
-    try {
-        const command = new GetUserCommand({
-            AccessToken: data.accessToken
-        });
-        response = await client.send(command);
-    } catch (err) {
-        if (err instanceof NotAuthorizedException) {
-            const tokenService = TokenService.getInstance();
-            await tokenService.refreshTokens();
-            const command = new GetUserCommand({
-                AccessToken: tokenService.getAccessToken()
-            });
-            response = await client.send(command);
-        } else {
-            throw new Error("Something went wrong..")
-        }
-    };
-
-    const attributes = Object.fromEntries(
-        (response.UserAttributes || []).map(attr => [attr.Name, attr.Value])
-    );
-
-    const user: CognitoUser = {
-        email: attributes.email,
-        name: attributes.name,
-        sub: attributes.sub,
-        verified: Boolean(attributes.email_verified),
-        picture: attributes.picture
-    }
-
-    return user;
+export async function getUserApi(): Promise<User> {
+    const response = await apiClient("/users/me", { method: "GET" });
+    const user = await response.json();
+    return user?.data as User;
 }
 
 export async function refreshTokenApi(data: RefreshTokenRequestData): Promise<RefreshTokenResponseData> {

@@ -21,7 +21,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="lambdacrm-theme">
         <QueryClientProvider client={queryClient}>
-          {/* <AuthContextProvider> */}
+          <AuthContextProvider>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/app/organizations/:organizationID/dashboard" element={<AppLayout><DashboardPage /></AppLayout>} />
@@ -33,7 +33,7 @@ function App() {
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/signup/confirm" element={<ConfirmUserPage />} />
             </Routes>
-          {/* </AuthContextProvider> */}
+          </AuthContextProvider>
         </QueryClientProvider>
         <Toaster />
     </ThemeProvider>

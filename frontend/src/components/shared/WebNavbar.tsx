@@ -6,7 +6,7 @@ import { Building2Icon, LogOutIcon, SettingsIcon } from "lucide-react"
 export default function WebNavbar() {
     return <div className="w-full max-w-full h-[80px] bg-sidebar flex flex-col justify-center">
         <div className="flex max-w-6xl w-full m-auto bg-red justify-between">
-            <div className="flex gap-x-5 mt-1">
+            <div className="flex gap-x-5 mt-2">
                 <Link to="/"><p>Home</p></Link>
             </div>
             <div>

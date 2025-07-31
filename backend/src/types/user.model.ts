@@ -1,4 +1,4 @@
-import { OrganizationRole } from "./organization.model";
+import { Organization, OrganizationRole } from "./organization.model";
 
 /**
  * Represents a user in the CRM.
@@ -12,6 +12,9 @@ export interface User {
   name: string;
   verified: boolean;
   picture?: string;
+
+  // Note: These are not stored in the entity itself, but are populated after fetching for easier access.
+  organizations?: UserOrganization[];
 }
 
 /**
@@ -25,4 +28,8 @@ export interface UserOrganization {
   userId: string; // (PK) => e.g., "USER_<SUB>"
   organizationId: string; // (SK) => e.g., "ORGANIZATION_123"
   role: OrganizationRole;
+
+  // Note: These are not stored in the entity itself, but are populated after fetching for easier access.
+  member?: User;
+  organization?: Organization;
 }

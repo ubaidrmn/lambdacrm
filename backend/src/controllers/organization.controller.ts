@@ -40,30 +40,13 @@ export default class OrganizationController {
 
         if (!request?.params?.id) { throw new AppError("Organization ID is required!"); };
 
-        const users = await orgService.getOrganizationUsers(request?.params?.id);
+        const members = await orgService.getOrganizationMembers(request?.params?.id);
 
         return {
             statusCode: 200,
             body: JSON.stringify({
-                data: users
+                data: members
             })
         }
     };
-
-    @RegisterRoute({ 
-        pattern: RegExp(`^/organizations/?$`), 
-        method: RouteMethod.GET
-    })
-    async getUserOrganizations(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
-        const userService = new UserService();
-        const orgs = await userService.getUserOrganizations(request.authenticatedUser.id);
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify({
-                data: orgs
-            })
-        }
-    };
-
 }

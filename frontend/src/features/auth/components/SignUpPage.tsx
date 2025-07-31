@@ -47,10 +47,6 @@ function SignUpPage() {
                 verificationEmail: formik.values.email,
                 loading: false
             })
-            // auth.setAuth({
-            //     isAuthenticated: false,
-            //     user: userInstance
-            // });
             formik.setSubmitting(false);
             navigate("/signup/confirm")
         },
