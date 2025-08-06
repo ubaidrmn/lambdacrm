@@ -31,8 +31,8 @@ export default class TokenService {
     }
 
     deleteTokens(): void {
-        this.cookies.remove("access-token");
-        this.cookies.remove("refresh-token");
+        this.cookies.remove("access-token", { path: "/" });
+        this.cookies.remove("refresh-token", { path: "/" });
 
         // Fire an event notifying that the user has been logged out.
         document.dispatchEvent(new AppAuthStateChangeEvent({ isAuthenticated: false }));
