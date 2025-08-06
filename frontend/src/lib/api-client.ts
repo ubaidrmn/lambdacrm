@@ -3,6 +3,7 @@ import { AppAuthStateChangeEvent } from "./events";
 
 type ApiClientOptions = { 
     method: 'POST' | 'GET' | 'PUT' | 'DELETE';
+    body?: Record<string, any>
 }
 
 export async function apiClient(path: string, options: ApiClientOptions) {
@@ -19,13 +20,18 @@ export async function apiClient(path: string, options: ApiClientOptions) {
     const BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
     const runFetch = async (accessToken: string) => {
-        const _response = await fetch(`${BASE_URL}${path}`, {
+        const _options: any = {
             method: options.method,
             headers: {
                 "Authorization": `Bearer ${accessToken}`
             }
-        });
+        }
 
+        if (options.method === "POST" && options.body) {
+            _options["body"] = JSON.stringify(options.body);
+        }
+
+        const _response = await fetch(`${BASE_URL}${path}`, _options);
         return _response;
     }
 
