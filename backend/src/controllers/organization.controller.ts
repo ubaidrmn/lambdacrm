@@ -4,7 +4,6 @@ import { RegisterRoute } from "@/lib/decorators";
 import { CreateOrganizationRequestBodyType, CreateOrganizationRequestBody } from "@/schemas/organization.schemas";
 import OrganizationService from "@/services/organization.service";
 import { UUID_REGEX } from "@/lib/regex";
-import UserService from "@/services/user.service";
 import { AppError } from "@/lib/errors";
 
 export default class OrganizationController {

@@ -41,7 +41,10 @@ export default class LeadController {
 
     if (!request?.params?.organization_id) { throw new AppError("Organization ID is required!"); };
     const leadService = new LeadService();
-    const leads = await leadService.getOrganizationLeads(request?.params?.organization_id);
+    const leads = await leadService.getOrganizationLeads({
+      user: request.authenticatedUser,
+      organizationId: request.params.organization_id
+    });
 
     return {
       statusCode: 200,

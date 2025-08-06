@@ -12,7 +12,7 @@ import { getAuthenticatedUser } from "./lib/auth";
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
         const accessToken = event.headers["Authorization"]?.split("Bearer ")[1];
-        if (!accessToken) { throw new AppError("Authorization error not found!"); }
+        if (!accessToken) { throw new AppError("Authorization token not found!"); }
 
         const user = await getAuthenticatedUser(accessToken);
 
