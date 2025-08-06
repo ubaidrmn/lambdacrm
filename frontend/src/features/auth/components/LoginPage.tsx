@@ -39,8 +39,6 @@ function LoginPage() {
         onSuccess: (response) => {
             toast.success("Logged in successfuly");
             const tokenService = TokenService.getInstance();
-            // Setting the tokens will automatically re-route the user to dashboard.
-            // setTokens -> Fires AppAuthStateChangeEvent -> Captured by <AuthPage />
             tokenService.setTokens(response.accessToken, response.refreshToken);
             formik.setSubmitting(false);
         },

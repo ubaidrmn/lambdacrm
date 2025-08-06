@@ -13,6 +13,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import EditLeadSheet from "./EditLeadSheet"
+import { Button } from "@/components/ui/button"
+import { DeleteIcon, TrashIcon } from "lucide-react"
+import type { UpdateLeadRequestData } from "../types"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -54,21 +57,24 @@ export function LeadsDataTable<TData, TValue>({
       </TableHeader>
       <TableBody>
         {table.getRowModel().rows?.length ? (
-          table.getRowModel().rows.map((row) => (
-            <TableRow
-              key={row.id}
-              data-state={row.getIsSelected() && "selected"}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          table.getRowModel().rows.map((row) => {
+            return (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+                <TableCell>
+                  <EditLeadSheet initialData={row.original as any} />
+                  <Button className="ml-2" variant={"destructive"}><TrashIcon /></Button>
                 </TableCell>
-              ))}
-              <TableCell>
-                <EditLeadSheet />
-              </TableCell>
-            </TableRow>
-          ))
+              </TableRow>
+            )
+          })
         ) : (
           <TableRow>
             <TableCell colSpan={columns.length} className="h-24 text-center">

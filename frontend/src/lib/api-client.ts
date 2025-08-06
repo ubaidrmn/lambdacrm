@@ -23,7 +23,8 @@ export async function apiClient(path: string, options: ApiClientOptions) {
         const _options: any = {
             method: options.method,
             headers: {
-                "Authorization": `Bearer ${accessToken}`
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
             }
         }
 

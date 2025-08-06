@@ -8,3 +8,12 @@ export interface CreateLeadRequestData {
   expectedAmount?: number;
   status: LeadStatus;
 }
+
+export interface UpdateLeadRequestData {
+  organizationId: string;
+  creatorId: string;
+  title: string;
+  notes?: string;
+  expectedAmount?: number;
+  status: LeadStatus;
+}
