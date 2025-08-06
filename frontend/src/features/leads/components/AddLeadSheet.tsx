@@ -32,8 +32,8 @@ function AddLeadSheet() {
 
     const createLeadMutation = useMutation({
         mutationFn: createLeadApi,
-        onSuccess: (lead) => {
-            console.log(lead);
+        onSuccess: () => {
+            queryClient.invalidateQueries(['get-leads'] as any)
         },
         onError: (err) => {
             toast.error(err.message);        

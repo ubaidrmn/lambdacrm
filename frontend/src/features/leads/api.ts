@@ -13,3 +13,7 @@ export async function createLeadApi(lead: CreateLeadRequestData): Promise<Lead> 
     const data = await response.json();
     return data?.data as Lead;
 }
+
+export async function deleteLeadApi({ id, organizationId }: { id: string, organizationId: string }): Promise<void> {
+    await apiClient(`/organizations/${organizationId}/leads/${id}`, { method: "DELETE" });
+}

@@ -33,6 +33,8 @@ function LeadsPage() {
                     status: lead.status,
                     expectedAmount: lead.expectedAmount,
                     notes: lead.notes,
+                    id: lead.id,
+                    organizationId: lead.organizationId
                 }
             })} />
       </>

@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/table"
 import EditLeadSheet from "./EditLeadSheet"
 import { Button } from "@/components/ui/button"
-import { DeleteIcon, TrashIcon } from "lucide-react"
-import type { UpdateLeadRequestData } from "../types"
+import { TrashIcon } from "lucide-react"
+import { deleteLeadApi } from "../api"
+import { toast } from "sonner"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -31,6 +33,17 @@ export function LeadsDataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  const queryClient = useQueryClient();
+  const deleteLeadMutation = useMutation({
+    mutationFn: deleteLeadApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['get-leads'] as any)
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
 
   return (
     <Table>
@@ -70,7 +83,13 @@ export function LeadsDataTable<TData, TValue>({
                 ))}
                 <TableCell>
                   <EditLeadSheet initialData={row.original as any} />
-                  <Button className="ml-2" variant={"destructive"}><TrashIcon /></Button>
+                  <Button onClick={async () => {
+                    const data = row.original as any;
+                    deleteLeadMutation.mutate({
+                      id: data.id, 
+                      organizationId: data.organizationId
+                    });
+                  }} className="ml-2" variant={"destructive"}><TrashIcon /></Button>
                 </TableCell>
               </TableRow>
             )

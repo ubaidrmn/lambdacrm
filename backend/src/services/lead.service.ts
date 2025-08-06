@@ -52,4 +52,12 @@ export default class LeadService {
         return lead;
     }
 
+    async deleteLead(input: {
+        id: string;
+        organizationId: string;
+    }): Promise<void> {
+        const leadRepository = new LeadRepository();
+        await leadRepository.delete(input);
+    }
+
 }

@@ -1,6 +1,6 @@
 import LambdaCRMDatabase from "@/lib/database";
 import { Lead, LeadStatus } from "@/types/lead.model";
-import { PutItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DeleteItemCommand, PutItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { AppError } from "@/lib/errors";
@@ -67,8 +67,8 @@ export default class LeadRepository {
     }
 
     return result.Items.map(item => ({
-      id: item.PK,
-      organizationId: item.SK,
+      id: item.SK,
+      organizationId: item.PK,
       creatorId: item.creatorId,
       title: item.title,
       status: item.status,
@@ -149,6 +149,24 @@ export default class LeadRepository {
       notes: result.Attributes.notes?.S,
       expectedAmount: result.Attributes.expectedAmount?.N ? parseFloat(result.Attributes.expectedAmount.N) : undefined
     };
+  }
+
+  async delete(input: {
+    id: string;
+    organizationId: string;
+  }): Promise<void> {
+    const db = LambdaCRMDatabase.getInstance();
+
+    const command = new DeleteItemCommand({
+      TableName: db.tableName,
+      Key: {
+        PK: { S: input.organizationId },
+        SK: { S: input.id }
+      }
+    })
+   
+    await db.client.send(command);
+
   }
 
 }

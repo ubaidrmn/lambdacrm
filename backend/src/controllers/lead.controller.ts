@@ -81,4 +81,27 @@ export default class LeadController {
       })
     }
   };
+
+    @RegisterRoute({ 
+    pattern: RegExp(`^/organizations/(?<organization_id>${UUID_REGEX})/leads/(?<lead_id>LEAD_${UUID_REGEX})/?$`), 
+    method: RouteMethod.DELETE,
+  })
+  async deleteLead(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
+    if (!request?.params?.organization_id) { throw new AppError("Organization ID is required!"); };
+    if (!request?.params?.lead_id) { throw new AppError("Lead ID is required!"); };
+
+    const data = request.body as unknown as UpdateLeadRequestBodyType;
+    const leadService = new LeadService();
+    await leadService.deleteLead({
+      id: request.params.lead_id,
+      organizationId: request.params.organization_id,
+    });
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "Lead deleted successfuly!"
+      })
+    }
+  };
 }
