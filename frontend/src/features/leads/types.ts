@@ -1,10 +1,10 @@
-export type Lead = {
-    id: string;
-    title: string;
-    contactId: string;
-    status: LeadStatus;
-    expectedAmount: number;
-    notes: string;
-}
+import type { LeadStatus } from "@/types/lead.model";
 
-export type LeadStatus = 'NEW' | 'CONTACTED' | 'QUALIFIED';
+export interface CreateLeadRequestData {
+  organizationId: string;
+  creatorId: string;
+  title: string;
+  notes?: string;
+  expectedAmount?: number;
+  status: LeadStatus;
+}

@@ -1,14 +1,7 @@
-import type { ColumnDef } from "@tanstack/react-table";
-import type { Lead } from "./types";
-
 export const leadsDataTableColumns = [
     {
-        accessorKey: "id",
-        header: "ID",
-    },
-    {
-        accessorKey: "contactId",
-        header: "Contact ID"
+        accessorKey: "title",
+        header: "Title"
     },
     {
         accessorKey: "status",
@@ -21,9 +14,5 @@ export const leadsDataTableColumns = [
     {
         accessorKey: "notes",
         header: "Notes"
-    },
-    {
-        accessorKey: "title",
-        header: "Title"
-    },
+    }
 ]

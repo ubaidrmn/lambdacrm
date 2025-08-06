@@ -17,8 +17,12 @@ import { Building2Icon, ChevronDown, ChevronUp, LogOutIcon, PlusIcon, SettingsIc
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import AuthContext from "@/features/auth/context";
+import type { UserOrganization } from "@/types/user.model";
+import { useContext } from "react";
 
 function AppSidebar() {
+  const authContext = useContext(AuthContext);
   const params = useParams();
 
   return (
@@ -29,7 +33,7 @@ function AppSidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton>
-                <Building2Icon /> Demo Organization
+                <Building2Icon /> {authContext.auth.user?.organizations?.filter(org => org.organizationId === params.organizationId)[0]?.organization?.title || "Error"}
                 <ChevronDown className="ml-auto" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
@@ -38,7 +42,13 @@ function AppSidebar() {
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Select Organization</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Demo Organization</DropdownMenuItem>
+              {authContext.auth.user?.organizations?.map((userOrg: UserOrganization) => (
+                <Link key={userOrg.organizationId} to={`/app/organizations/${userOrg.organizationId}/dashboard`}>
+                  <DropdownMenuItem>
+                    {userOrg.organization?.title}
+                  </DropdownMenuItem>
+                </Link>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </ SidebarMenuItem>

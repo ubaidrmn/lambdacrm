@@ -50,7 +50,6 @@ function LoginPage() {
                     verificationRequired: true,
                     verificationEmail: formik.values.email,
                     isAuthenticated: true,
-                    loading: false,
                     user: null
                 });
             } else {

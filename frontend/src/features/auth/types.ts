@@ -1,3 +1,5 @@
+import type { User } from "@/types/user.model";
+
 export type RegisterUserRequestData = {
     email: string;
     password: string;
@@ -26,3 +28,15 @@ export type RefreshTokenRequestData = {
 export type RefreshTokenResponseData = {
     accessToken: string;
 }
+
+export type AuthContextValueType = {
+    isAuthenticated: boolean;
+    user: User | null;
+    verificationRequired?: boolean;
+    verificationEmail?: string;
+};
+
+export type AuthContextType = {
+    auth: AuthContextValueType;
+    setAuth: React.Dispatch<React.SetStateAction<AuthContextValueType>>;
+};
