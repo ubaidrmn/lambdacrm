@@ -52,6 +52,17 @@ const createMockEvent = (path: string, method: string, body: string): APIGateway
 const server = http.createServer(async (req: any, res: any) => {
     let body = '';
 
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Or restrict to a domain
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
+    // Handle preflight (OPTIONS) request
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204); // No Content
+        res.end();
+        return;
+    }
+
     req.on('data', (chunk: any) => {
         body += chunk.toString();;
     });
