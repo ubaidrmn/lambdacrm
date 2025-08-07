@@ -3,7 +3,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -11,17 +11,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import EditLeadSheet from "./EditLeadSheet"
-import { Button } from "@/components/ui/button"
-import { TrashIcon } from "lucide-react"
-import { deleteLeadApi } from "../api"
-import { toast } from "sonner"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+} from "@/components/ui/table";
+import EditLeadSheet from "./EditLeadSheet";
+import { Button } from "@/components/ui/button";
+import { TrashIcon } from "lucide-react";
+import { deleteLeadApi } from "../api";
+import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function LeadsDataTable<TData, TValue>({
@@ -32,17 +32,17 @@ export function LeadsDataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
+  });
 
   const queryClient = useQueryClient();
   const deleteLeadMutation = useMutation({
     mutationFn: deleteLeadApi,
     onSuccess: () => {
-      queryClient.invalidateQueries(['get-leads'] as any)
+      queryClient.invalidateQueries(["get-leads"] as any);
     },
     onError: (error) => {
       toast.error(error.message);
-    }
+    },
   });
 
   return (
@@ -60,11 +60,9 @@ export function LeadsDataTable<TData, TValue>({
                         header.getContext()
                       )}
                 </TableHead>
-              )
+              );
             })}
-              <TableHead key={"actions-header"}>
-                Actions
-              </TableHead>
+            <TableHead key={"actions-header"}>Actions</TableHead>
           </TableRow>
         ))}
       </TableHeader>
@@ -83,16 +81,22 @@ export function LeadsDataTable<TData, TValue>({
                 ))}
                 <TableCell>
                   <EditLeadSheet initialData={row.original as any} />
-                  <Button onClick={async () => {
-                    const data = row.original as any;
-                    deleteLeadMutation.mutate({
-                      id: data.id, 
-                      organizationId: data.organizationId
-                    });
-                  }} className="ml-2" variant={"destructive"}><TrashIcon /></Button>
+                  <Button
+                    onClick={async () => {
+                      const data = row.original as any;
+                      deleteLeadMutation.mutate({
+                        id: data.id,
+                        organizationId: data.organizationId,
+                      });
+                    }}
+                    className="ml-2"
+                    variant={"destructive"}
+                  >
+                    <TrashIcon />
+                  </Button>
                 </TableCell>
               </TableRow>
-            )
+            );
           })
         ) : (
           <TableRow>
@@ -103,7 +107,7 @@ export function LeadsDataTable<TData, TValue>({
         )}
       </TableBody>
     </Table>
-  )
+  );
 }
 
 export default LeadsDataTable;
