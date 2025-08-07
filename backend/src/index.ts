@@ -38,7 +38,6 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         }
 
         const response = await route.handler(request);
-        console.log(route?.pattern, response)
         return response;
 
     } catch (err) {
