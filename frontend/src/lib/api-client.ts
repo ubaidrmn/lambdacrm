@@ -28,7 +28,7 @@ export async function apiClient(path: string, options: ApiClientOptions) {
             }
         }
 
-        if (options.method === "POST" && options.body) {
+        if ((options.method === "POST" || options.method === "PUT") && options.body) {
             _options["body"] = JSON.stringify(options.body);
         }
 
