@@ -143,7 +143,7 @@ export default class LeadRepository {
     return {
       organizationId: result.Attributes.PK.S!,
       id: result.Attributes.SK.S!,
-      creatorId: result.Attributes.creatorID.S!,
+      creatorId: result.Attributes.creatorId.S!,
       title: result.Attributes.title.S!,
       status: result.Attributes.status.S as any,
       notes: result.Attributes.notes?.S,
