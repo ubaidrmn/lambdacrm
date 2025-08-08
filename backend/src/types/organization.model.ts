@@ -9,6 +9,8 @@ export interface Organization {
   id: string; // e.g., organization_123
   title: string;
   creatorId: string; // e.g., USER_<SUB>
+  createdAt: string;
+  updatedAt: string;
 
   // Note: These are not stored in the entity itself, but are populated after fetching for easier access.
   creator?: User;

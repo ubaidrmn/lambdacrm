@@ -11,10 +11,13 @@ export default class OrganizationRepository {
     creatorId: string;
   }): Promise<Organization> {
     const db = LambdaCRMDatabase.getInstance();
+    const now = new Date().toISOString();
 
     const organization: Organization = {
       ...input,
       id: `ORGANIZATION_${uuidv4()}`,
+      createdAt: now,
+      updatedAt: now,
     };
 
     const transactCommand = new TransactWriteItemsCommand({

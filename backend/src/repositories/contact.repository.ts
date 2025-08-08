@@ -20,8 +20,8 @@ export default class ContactRepository {
     creatorId: string;
   }): Promise<Contact> {
     const db = LambdaCRMDatabase.getInstance();
-
     const now = new Date().toISOString();
+
     const contact: Contact = {
       ...input,
       id: `CONTACT_${uuidv4()}`,

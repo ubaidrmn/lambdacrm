@@ -16,10 +16,13 @@ export default class LeadRepository {
     status: LeadStatus;
   }): Promise<Lead> {
     const db = LambdaCRMDatabase.getInstance();
+    const now = new Date().toISOString();
 
     const lead: Lead = {
       ...input,
       id: `LEAD_${uuidv4()}`,
+      createdAt: now,
+      updatedAt: now,
     }
 
     const item: any = {
@@ -27,7 +30,9 @@ export default class LeadRepository {
       SK: { S: lead.id },
       title: { S: lead.title },
       status: { S: lead.status },
-      creatorId: { S: lead.creatorId }
+      creatorId: { S: lead.creatorId },
+      createdAt: { S: lead.createdAt },
+      updatedAt: { S: lead.updatedAt }
     }
 
     if (lead?.notes) {
@@ -73,7 +78,9 @@ export default class LeadRepository {
       title: item.title,
       status: item.status,
       notes: item?.notes,
-      expectedAmount: item?.expectedAmount
+      expectedAmount: item?.expectedAmount,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt
     }));
   }
 
@@ -88,9 +95,13 @@ export default class LeadRepository {
     const db = LambdaCRMDatabase.getInstance();
 
     let updateExpression = "SET ";
-    const expressionAttributeNames: any = {};
-    const expressionAttributeValues: any = {};
-    const updateFields: string[] = [];
+    const expressionAttributeNames: any = {
+      "#updatedAt": "updatedAt",
+    };
+    const expressionAttributeValues: any = {
+      ":updatedAt": { S: new Date().toISOString() },
+    };
+    const updateFields: string[] = ["#updatedAt = :updatedAt"];
 
     if (input?.title) {
       updateFields.push("#title = :title");
@@ -147,6 +158,8 @@ export default class LeadRepository {
       title: result.Attributes.title.S!,
       status: result.Attributes.status.S as any,
       notes: result.Attributes.notes?.S,
+      createdAt: result.Attributes.createdAt.S!,
+      updatedAt: result.Attributes.updatedAt.S!,
       expectedAmount: result.Attributes.expectedAmount?.N ? parseFloat(result.Attributes.expectedAmount.N) : undefined
     };
   }

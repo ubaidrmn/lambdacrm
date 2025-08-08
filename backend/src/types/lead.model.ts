@@ -16,6 +16,8 @@ export interface Lead {
   notes?: string;
   expectedAmount?: number;
   status: LeadStatus;
+  createdAt: string;
+  updatedAt: string;
 
   // Note: These are not stored in the entity itself, but are populated after fetching for easier access.
   creator?: User;
