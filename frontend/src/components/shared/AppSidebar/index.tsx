@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import AuthContext from "@/features/auth/context";
 import type { UserOrganization } from "@/types/user.model";
 import { useContext } from "react";
+import TokenService from "@/lib/token-service";
 
 function AppSidebar() {
   const authContext = useContext(AuthContext);
@@ -104,7 +105,10 @@ function AppSidebar() {
                     <span>Settings</span>
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  const ts = new TokenService();
+                  ts.deleteTokens();
+                }}>
                   <LogOutIcon />
                   <span>Sign out</span>
                 </DropdownMenuItem>

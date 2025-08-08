@@ -6,9 +6,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 
 function ContactsPageBreadcrumb() {
+  const params: any = useParams();
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -20,7 +22,7 @@ function ContactsPageBreadcrumb() {
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to={`/app/organizations/${params.organizationId}/dashboard`}>Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />

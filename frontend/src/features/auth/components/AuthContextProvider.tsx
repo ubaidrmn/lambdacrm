@@ -50,8 +50,6 @@ function AuthContextProvider(props: { children: ReactNode }) {
     }, [])
 
     useEffect(() => {
-        console.log(auth);
-
         const tokenService = TokenService.getInstance();
 
         if (!auth.user
@@ -72,9 +70,6 @@ function AuthContextProvider(props: { children: ReactNode }) {
             })
             .catch(err => {
                 tokenService.deleteTokens();
-                toast.error("Error", {
-                    description: err.message
-                });
             });
         }
 

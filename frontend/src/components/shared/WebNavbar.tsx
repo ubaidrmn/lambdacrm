@@ -25,7 +25,6 @@ export default function WebNavbar() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <Link to="/app/organizations"><DropdownMenuItem><Building2Icon />Organizations</DropdownMenuItem></Link>
-                        <DropdownMenuItem><SettingsIcon />Settings</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => {
                             const tokenService = TokenService.getInstance();
                             tokenService.deleteTokens();
