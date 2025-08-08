@@ -2,7 +2,7 @@ import TokenService from "@/lib/token-service";
 import { AppAuthStateChangeEvent } from "./events";
 
 type ApiClientOptions = { 
-    method: 'POST' | 'GET' | 'PUT' | 'DELETE';
+    method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH';
     body?: Record<string, any>
 }
 
@@ -28,7 +28,7 @@ export async function apiClient(path: string, options: ApiClientOptions) {
             }
         }
 
-        if ((options.method === "POST" || options.method === "PUT") && options.body) {
+        if ((["PUT", "PATCH", "POST"].includes(options.method)) && options.body) {
             _options["body"] = JSON.stringify(options.body);
         }
 

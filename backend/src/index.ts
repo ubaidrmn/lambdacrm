@@ -1,6 +1,7 @@
 import "@/controllers/lead.controller";
 import "@/controllers/user.controller";
 import "@/controllers/organization.controller";
+import "@/controllers/contact.controller";
 
 import * as z from "zod"
 import RouteRegistry from "@/lib/route.registry";
@@ -19,7 +20,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         const routeRegistry = RouteRegistry.getInstance();
         const route = routeRegistry.get(event.path, event.httpMethod as RouteMethod);
 
-        if (route.method === RouteMethod.POST || route.method === RouteMethod.PUT) {
+        if (["PUT", "PATCH", "POST"].includes(route.method)) {
             const rawBody = event.body;
             event.body = JSON.parse(rawBody || "{}");
 
@@ -41,6 +42,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         return response;
 
     } catch (err) {
+        console.log(err);
+
         if (err instanceof AppError) {
             return {
                 statusCode: err.statusCode,
