@@ -79,7 +79,6 @@ function EditLeadSheet(props: {
     <Sheet onOpenChange={(open) => open && formik.resetForm()}>
       <SheetTrigger>
         <EditIcon />
-        Edit
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>

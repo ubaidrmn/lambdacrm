@@ -33,7 +33,7 @@ export async function deleteLeadApi({
 export async function updateLeadApi(lead: Lead): Promise<Lead> {
   const response = await apiClient(
     `/organizations/${lead.organizationId}/leads/${lead.id}`,
-    { method: "PUT", body: lead }
+    { method: "PATCH", body: lead }
   );
   const data = await response.json();
   return data?.data as Lead;
