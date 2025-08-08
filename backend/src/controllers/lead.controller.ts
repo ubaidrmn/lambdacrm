@@ -56,7 +56,7 @@ export default class LeadController {
 
   @RegisterRoute({ 
     pattern: RegExp(`^/organizations/(?<organization_id>${UUID_REGEX})/leads/(?<lead_id>LEAD_${UUID_REGEX})/?$`), 
-    method: RouteMethod.PUT,
+    method: RouteMethod.PATCH,
     requestBodySchema: UpdateLeadRequestBody 
   })
   async updateLead(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
