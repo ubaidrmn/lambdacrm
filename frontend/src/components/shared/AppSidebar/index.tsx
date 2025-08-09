@@ -17,14 +17,18 @@ import { Building2Icon, ChevronDown, ChevronUp, LogOutIcon, PlusIcon, SettingsIc
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import AuthContext from "@/features/auth/context";
 import type { UserOrganization } from "@/types/user.model";
-import { useContext } from "react";
 import TokenService from "@/lib/token-service";
+import { useQuery } from "@tanstack/react-query";
+import { getUserOrganizationsApi } from "@/features/web/api";
 
 function AppSidebar() {
-  const authContext = useContext(AuthContext);
   const params = useParams();
+  const organizations = useQuery({
+    queryKey: ["get-organizations"],
+    queryFn: getUserOrganizationsApi,
+    initialData: []
+  })
 
   return (
     <Sidebar>
@@ -34,7 +38,7 @@ function AppSidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton>
-                <Building2Icon /> {authContext.auth.user?.organizations?.filter(org => org.organizationId === params.organizationId)[0]?.organization?.title || "Error"}
+                <Building2Icon /> {organizations.data?.filter(org => org.organizationId === params.organizationId)[0]?.organization?.title || "Error"}
                 <ChevronDown className="ml-auto" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
@@ -43,7 +47,7 @@ function AppSidebar() {
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Select Organization</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {authContext.auth.user?.organizations?.map((userOrg: UserOrganization) => (
+              {organizations.data?.map((userOrg: UserOrganization) => (
                 <Link key={userOrg.organizationId} to={`/app/organizations/${userOrg.organizationId}/dashboard`}>
                   <DropdownMenuItem>
                     {userOrg.organization?.title}
@@ -99,12 +103,18 @@ function AppSidebar() {
                 side="top"
                 className="w-[--radix-popper-anchor-width]"
               >
-                <Link to="/settings">
+                <Link to="/app/organizations">
+                  <DropdownMenuItem>
+                    <Building2Icon />
+                    <span>Organizations</span>
+                  </DropdownMenuItem>
+                </Link>
+                {/* <Link to="/app/organizations/settings">
                   <DropdownMenuItem>
                     <SettingsIcon />
                     <span>Settings</span>
                   </DropdownMenuItem>
-                </Link>
+                </Link> */}
                 <DropdownMenuItem onClick={() => {
                   const ts = new TokenService();
                   ts.deleteTokens();
