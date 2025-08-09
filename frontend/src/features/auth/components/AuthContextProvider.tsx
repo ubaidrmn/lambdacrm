@@ -68,9 +68,6 @@ function AuthContextProvider(props: { children: ReactNode }) {
                     verificationRequired: !user.verified
                 })
             })
-            .catch(err => {
-                tokenService.deleteTokens();
-            });
         }
 
         if (auth.isAuthenticated 

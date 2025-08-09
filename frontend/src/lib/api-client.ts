@@ -47,6 +47,11 @@ export async function apiClient(path: string, options: ApiClientOptions) {
 
         await tokenService.refreshTokens();
         const response = await runFetch(tokenService.getAccessToken());
+
+        if (response.status === 401) {
+            tokenService.deleteTokens();
+        }
+
         return response;
     }
 
