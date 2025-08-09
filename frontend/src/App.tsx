@@ -12,7 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router";
 import { Toaster } from "sonner";
 import AppPage from "./features/web/components/OrganizationsPage";
-import HomePage from "./features/web/components/HomePage";
+import LandingPage from "./features/web/components/LandingPage";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +22,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<LandingPage />} />
             <Route
               path="/app/organizations/:organizationId/dashboard"
               element={

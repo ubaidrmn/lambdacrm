@@ -31,30 +31,34 @@ export default function OrganizationsPage() {
             <CreateOrganizationDialog />
         </div>
         <p className="leading-7 mt-2 mb-5">
-            You can manage all of your organizations here.
+          You can manage all of your organizations here.
         </p>
-        <div className="grid grid-cols-3 gap-x-5 gap-y-5">
-          {organizations.data.map((userOrg: UserOrganization) => {
-            return (
-              <Card key={userOrg.organizationId}>
-                <CardHeader>
-                  <CardTitle>{userOrg.organization?.title}</CardTitle>
-                  <CardDescription>
-                    {userOrg.role.substring(0, 1).toUpperCase() +
-                      userOrg.role.substring(1).toLowerCase()}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Link
-                    to={`/app/organizations/${userOrg.organizationId}/dashboard`}
-                  >
-                    <Button>Open</Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        
+        {organizations.data.length > 0 ? 
+        <>
+        <div className="grid grid-cols-3 gap-x-5 gap-y-5"> {organizations.data.map((userOrg: UserOrganization) => {
+          return (
+            <Card key={userOrg.organizationId}>
+              <CardHeader>
+                <CardTitle>{userOrg.organization?.title}</CardTitle>
+                <CardDescription>
+                  {userOrg.role.substring(0, 1).toUpperCase() +
+                    userOrg.role.substring(1).toLowerCase()}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link
+                  to={`/app/organizations/${userOrg.organizationId}/dashboard`}
+                >
+                  <Button>Open</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          );
+        })} </div> 
+        </>
+        : <p className="leading-7 mt-2 mb-5 italic text-destructive">No organizations were found linked to your account. Create a new organization or ask your team to add you to an organization.</p>}
+      
       </section>
     </>
   );
