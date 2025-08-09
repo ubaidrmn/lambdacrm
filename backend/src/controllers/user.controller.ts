@@ -11,9 +11,6 @@ export default class UserController {
     })
     async getAuthenticatedUser(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
         const user = request.authenticatedUser;
-        const userService = new UserService();
-        const orgs = await userService.getUserOrganizations(request.authenticatedUser.id);
-        user.organizations = orgs;
 
         return {
             statusCode: 200,
@@ -22,4 +19,20 @@ export default class UserController {
             })
         }
     };
+
+    @RegisterRoute({ 
+        pattern: RegExp(`^/users/organizations/?$`), 
+        method: RouteMethod.GET
+    })
+    async getUserOrganizations(request: AppRouteRequest): Promise<APIGatewayProxyResult> {
+        const userService = new UserService();
+        const orgs = await userService.getUserOrganizations(request.authenticatedUser.id);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                data: orgs
+            })
+        };
+    }
 }

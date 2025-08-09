@@ -1,11 +1,42 @@
 import LambdaCRMDatabase from "@/lib/database";
 import { Lead, LeadStatus } from "@/types/lead.model";
-import { DeleteItemCommand, PutItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DeleteItemCommand, GetItemCommand, PutItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { AppError } from "@/lib/errors";
 
 export default class LeadRepository {
+
+  async findById(id: string, organizationId: string): Promise<Lead> {
+    const db = LambdaCRMDatabase.getInstance();
+
+    const command = new GetItemCommand({
+      TableName: db.tableName,
+      Key: {
+        PK: { S: organizationId },
+        SK: { S: id },
+      }
+    });
+
+    const result = await db.client.send(command);
+    const item = result.Item;
+
+    if (!item) {
+      throw new AppError("Lead not found")
+    }
+
+    return {
+      id: item.SK.S!,
+      organizationId: item.PK.S!,
+      creatorId: item.creatorId.S!,
+      title: item.title.S!,
+      status: item.status.S! as LeadStatus,
+      notes: item?.notes?.S!,
+      expectedAmount: item.expectedAmount?.N ? parseFloat(item.expectedAmount.N) : undefined,
+      createdAt: item.createdAt.S!,
+      updatedAt: item.updatedAt.S!
+    }
+  }
 
   async create(input: {
     organizationId: string;
@@ -156,7 +187,7 @@ export default class LeadRepository {
       id: result.Attributes.SK.S!,
       creatorId: result.Attributes.creatorId.S!,
       title: result.Attributes.title.S!,
-      status: result.Attributes.status.S as any,
+      status: result.Attributes.status.S as LeadStatus,
       notes: result.Attributes.notes?.S,
       createdAt: result.Attributes.createdAt.S!,
       updatedAt: result.Attributes.updatedAt.S!,

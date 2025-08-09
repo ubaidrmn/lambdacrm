@@ -6,20 +6,22 @@ import UserOrganizationRepository from "@/repositories/user-organization.reposit
 export default class UserService {
 
     async getUserOrganizations(userId: string): Promise<UserOrganization[]> {
+        let organizations = [];
         const userOrgRepository = new UserOrganizationRepository();
         const orgRepository = new OrganizationRepository();
         const userOrganizations = await userOrgRepository.findManyByUserId(userId);
-        const organizations = await orgRepository.findManyByIds(userOrganizations.map(
-            userOrg => userOrg.organizationId
-        ));
 
-        const orgsMap = new Map<string, Organization>();
-        organizations.forEach(org => orgsMap.set(org.id, org));
+        if (userOrganizations.length > 0) {
+            organizations = await orgRepository.findManyByIds(userOrganizations.map(
+                userOrg => userOrg.organizationId
+            ));
+            const orgsMap = new Map<string, Organization>();
+            organizations.forEach(org => orgsMap.set(org.id, org));
 
-        userOrganizations.forEach(userOrg => {
-            userOrg.organization = orgsMap.get(userOrg.organizationId);
-        });
-
+            userOrganizations.forEach(userOrg => {
+                userOrg.organization = orgsMap.get(userOrg.organizationId);
+            });
+        }
 
         return userOrganizations;
     }

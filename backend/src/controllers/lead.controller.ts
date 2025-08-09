@@ -22,7 +22,8 @@ export default class LeadController {
       title: data.title,
       notes: data.notes || undefined,
       expectedAmount: data.expectedAmount || undefined,
-      status: data.status
+      status: data.status,
+      user: request.authenticatedUser
     });
 
     return {
@@ -66,6 +67,7 @@ export default class LeadController {
     const data = request.body as unknown as UpdateLeadRequestBodyType;
     const leadService = new LeadService();
     const lead = await leadService.updateLead({
+      user: request.authenticatedUser,
       id: request.params.lead_id,
       organizationId: request.params.organization_id,
       title: data.title || undefined,
@@ -90,11 +92,11 @@ export default class LeadController {
     if (!request?.params?.organization_id) { throw new AppError("Organization ID is required!"); };
     if (!request?.params?.lead_id) { throw new AppError("Lead ID is required!"); };
 
-    const data = request.body as unknown as UpdateLeadRequestBodyType;
     const leadService = new LeadService();
     await leadService.deleteLead({
       id: request.params.lead_id,
       organizationId: request.params.organization_id,
+      user: request.authenticatedUser
     });
 
     return {

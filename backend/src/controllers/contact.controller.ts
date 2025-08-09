@@ -29,7 +29,8 @@ export default class ContactController {
       email: data.email || undefined,
       notes: data.notes || undefined,
       associatedLeadId: data.associatedLeadId || undefined,
-      creatorId: request.authenticatedUser.id
+      creatorId: request.authenticatedUser.id,
+      user: request.authenticatedUser
     });
 
     return {
@@ -86,7 +87,8 @@ export default class ContactController {
       phoneNumber: data.phoneNumber || undefined,
       email: data.email || undefined,
       notes: data.notes || undefined,
-      associatedLeadId: data.associatedLeadId || undefined
+      associatedLeadId: data.associatedLeadId || undefined,
+      user: request.authenticatedUser
     });
 
     return {
@@ -112,7 +114,8 @@ export default class ContactController {
     const contactService = new ContactService();
     await contactService.deleteContact({
       id: request.params.contact_id,
-      organizationId: request.params.organization_id
+      organizationId: request.params.organization_id,
+      user: request.authenticatedUser
     });
 
     return {

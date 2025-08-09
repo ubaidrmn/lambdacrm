@@ -1,8 +1,12 @@
+import { AppError } from "@/lib/errors";
+import { defineAbilitiesFor, SubjectType, UserActions } from "@/lib/permissions";
 import OrganizationMemberRepository from "@/repositories/organization-member.repository";
 import OrganizationRepository from "@/repositories/organization.repository";
+import UserOrganizationRepository from "@/repositories/user-organization.repository";
 import UserRepository from "@/repositories/user.repository";
 import { Organization, OrganizationMember } from "@/types/organization.model";
 import { User } from "@/types/user.model";
+import { subject } from "@casl/ability";
 
 export default class OrganizationService {
 
@@ -19,11 +23,22 @@ export default class OrganizationService {
         return org;
     }
 
-    async getOrganizationMembers(organizationId: string): Promise<OrganizationMember[]> {
-        const orgRepository = new OrganizationMemberRepository();
+    async getOrganizationMembers(input: {
+        organizationId: string,
+        user: User
+    }): Promise<OrganizationMember[]> {
+        const userOrganizationRepo = new UserOrganizationRepository();
+        const userOrganization = await userOrganizationRepo.find(input.user.id, input.organizationId);
+        const ability = defineAbilitiesFor(input.user);
+
+        if (!ability.can(UserActions.READ_ORGANIZATION_MEMBERS, subject(SubjectType.USER_ORGANIZATION, userOrganization))) {
+            throw new AppError("Not authorized to read members in this organization", 403);
+        }
+
+        const orgMemberRepository = new OrganizationMemberRepository();
         const userRepository = new UserRepository();
-        
-        const organizationMembers = await orgRepository.findManyByOrganizationId(organizationId);
+
+        const organizationMembers = await orgMemberRepository.findManyByOrganizationId(input.organizationId);
         const users = await userRepository.findManyByIds(organizationMembers.map(om => om.memberId));
 
         const usersMap = new Map<string, User>();

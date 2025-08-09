@@ -2,6 +2,7 @@ import LambdaCRMDatabase from "@/lib/database";
 import { Contact } from "@/types/contact.model";
 import {
   DeleteItemCommand,
+  GetItemCommand,
   PutItemCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
@@ -10,6 +11,39 @@ import { v4 as uuidv4 } from "uuid";
 import { AppError } from "@/lib/errors";
 
 export default class ContactRepository {
+
+  async findById(id: string, organizationId: string): Promise<Contact> {
+    const db = LambdaCRMDatabase.getInstance();
+
+    const command = new GetItemCommand({
+      TableName: db.tableName,
+      Key: {
+        PK: { S: organizationId },
+        SK: { S: id },
+      }
+    });
+
+    const result = await db.client.send(command);
+    const item = result.Item;
+
+    if (!item) {
+      throw new AppError("Contact not found")
+    }
+
+    return {
+      id: item.SK.S!,
+      fullName: item.fullName.S!,
+      organizationId: item.PK.S!,
+      creatorId: item.creatorId.S!,
+      notes: item?.notes?.S!,
+      createdAt: item.createdAt.S!,
+      updatedAt: item.updatedAt.S!,
+      email: item.email?.S,
+      phoneNumber: item.phoneNumber?.S,
+      associatedLeadId: item.associatedLeadId?.S
+    }
+  }
+
   async create(input: {
     organizationId: string;
     fullName: string;
