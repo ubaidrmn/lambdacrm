@@ -5,12 +5,12 @@ import "@/controllers/contact.controller";
 
 import * as z from "zod"
 import RouteRegistry from "@/lib/route.registry";
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEventV2, APIGatewayProxyResult } from "aws-lambda";
 import { AppError } from "@/lib/errors";
 import { AppRouteRequest, RouteMethod } from "./types/core";
 import { getAuthenticatedUser } from "./lib/auth";
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
     try {
         const accessToken = (event.headers["authorization"] || event.headers["Authorization"])?.split("Bearer ")[1];
         if (!accessToken) { throw new AppError("Authorization token not found!"); }
@@ -18,7 +18,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         const user = await getAuthenticatedUser(accessToken);
 
         const routeRegistry = RouteRegistry.getInstance();
-        const route = routeRegistry.get(event.path, event.httpMethod as RouteMethod);
+        const route = routeRegistry.get(event.rawPath, event.requestContext.http.method as RouteMethod);
 
         if (["PUT", "PATCH", "POST"].includes(route.method)) {
             const rawBody = event.body;
@@ -30,7 +30,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         }
 
         const request: AppRouteRequest = {
-            body: event.body,
+            body: event.body || "",
             authenticatedUser: user
         };
 
