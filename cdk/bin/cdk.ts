@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { LambdaCrmCdkStack } from '../lib/cdk-stack';
+import { LambdaCrmBackendStack, LambdaCrmFrontendStack } from '../lib/cdk-stack';
 
 const app = new cdk.App();
-new LambdaCrmCdkStack(app, 'LambdaCrmCdkStack', {
-
-});
+new LambdaCrmBackendStack(app, 'LambdaCrmBackendStack');
+new LambdaCrmFrontendStack(app, 'LambdaCrmFrontendStack');

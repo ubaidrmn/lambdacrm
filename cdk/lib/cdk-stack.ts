@@ -5,11 +5,15 @@ import * as apigwv2 from 'aws-cdk-lib/aws-apigatewayv2';
 import * as integrations from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as authorizers from 'aws-cdk-lib/aws-apigatewayv2-authorizers';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 import { join } from 'path';
 import { Construct } from 'constructs';
 
-export class LambdaCrmCdkStack extends cdk.Stack {
+export class LambdaCrmBackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -29,7 +33,8 @@ export class LambdaCrmCdkStack extends cdk.Stack {
         requireUppercase: true,
         requireDigits: true,
         requireSymbols: false
-      }
+      },
+      removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
     const mainClient = pool.addClient('main-client', {
@@ -44,7 +49,7 @@ export class LambdaCrmCdkStack extends cdk.Stack {
     const mainLambda = new lambda.Function(this, 'MainLambda', {
       code: lambda.Code.fromAsset(join(__dirname, '../../backend/deployment.build/')),
       runtime: lambda.Runtime.NODEJS_LATEST,
-      handler: 'index.handler'
+      handler: 'index.handler',
     });
 
     // DynamoDB table
@@ -105,12 +110,65 @@ export class LambdaCrmCdkStack extends cdk.Stack {
     });
 
     // Output
-    new cdk.CfnOutput(this, 'HTTP API URL', {
+    new cdk.CfnOutput(this, 'HTTP API', {
+      key: "apiUrl",
       value: httpApi.apiEndpoint
     });
 
-    new cdk.CfnOutput(this, 'DynamoDB Table Name', {
-      value: table.tableName
+    new cdk.CfnOutput(this, 'User Pool', {
+      key: "clientId",
+      value: mainClient.userPoolClientId
     });
+  }
+}
+
+export class LambdaCrmFrontendStack extends cdk.Stack {
+  public readonly siteBucket: s3.Bucket;
+  public readonly distribution: cloudfront.Distribution;
+
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    this.siteBucket = new s3.Bucket(this, 'LambdaCrmFrontendBucket', {
+      bucketName: 'lambda-crm-frontend-bucket',
+      cors: [{
+        allowedMethods: [s3.HttpMethods.GET],
+        allowedOrigins: ['*'],
+        allowedHeaders: ['*']
+      }],
+      enforceSSL: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS_ONLY,
+      objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_ENFORCED,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+
+    const oai = new cloudfront.OriginAccessIdentity(this, 'OAI');
+
+    this.siteBucket.addToResourcePolicy(new iam.PolicyStatement({
+      actions: ['s3:GetObject'],
+      resources: [this.siteBucket.arnForObjects('*')],
+      principals: [new iam.CanonicalUserPrincipal(oai.cloudFrontOriginAccessIdentityS3CanonicalUserId)],
+    }));
+
+    this.distribution = new cloudfront.Distribution(this, 'LambdaCrmFrontendDistribution', {
+      defaultBehavior: {
+        origin: new origins.S3Origin(this.siteBucket, { originAccessIdentity: oai }),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        originRequestPolicy: cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
+        responseHeadersPolicy: cloudfront.ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+      },
+      errorResponses: [{
+        httpStatus: 403,
+        responseHttpStatus: 200,
+        responsePagePath: '/index.html',
+        ttl: cdk.Duration.minutes(10)
+      }],
+      defaultRootObject: 'index.html',
+    });
+
+    new cdk.CfnOutput(this, 'BucketName', { value: this.siteBucket.bucketName });
+    new cdk.CfnOutput(this, 'CloudFrontURL', { value: this.distribution.domainName });
   }
 }
