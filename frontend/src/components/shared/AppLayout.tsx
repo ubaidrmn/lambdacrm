@@ -2,7 +2,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import AppSidebar from "@/components/shared/AppSidebar"
 import { useContext, useEffect, type ReactNode } from "react";
 import AuthContext from "@/features/auth/context";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 type AppLayoutProps = {
     children: ReactNode

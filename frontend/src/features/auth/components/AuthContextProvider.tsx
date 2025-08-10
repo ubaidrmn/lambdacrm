@@ -1,9 +1,7 @@
 import TokenService from "@/lib/token-service";
-import AppLoader from "@/components/ui/loader";
 import AuthContext from "../context";
 import { useEffect, useState, type ReactNode } from "react";
 import { getUserApi } from "@/features/auth/api";
-import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { AppAuthStateChangeEvent } from "@/lib/events";
 import { useLocation, useNavigate } from "react-router";
@@ -50,8 +48,6 @@ function AuthContextProvider(props: { children: ReactNode }) {
     }, [])
 
     useEffect(() => {
-        const tokenService = TokenService.getInstance();
-
         if (!auth.user
             && auth.isAuthenticated
             && !auth.verificationRequired

@@ -6,7 +6,6 @@ import {
   Sparkles,
   Users,
   Mail,
-  BarChart3,
   Clock,
   ShieldCheck,
   ArrowRight,
@@ -51,24 +50,6 @@ const stats = [
   { value: "+32%", label: "Avg. close rate lift" },
   { value: "<5m", label: "Setup time" },
   { value: "99.99%", label: "Uptime SLA" },
-];
-
-const steps = [
-  {
-    icon: <Users className="w-5 h-5" />,
-    title: "Import",
-    desc: "Bring in contacts via CSV or API in seconds.",
-  },
-  {
-    icon: <Workflow className="w-5 h-5" />,
-    title: "Pipeline",
-    desc: "Customize stages & automations that reflect reality.",
-  },
-  {
-    icon: <BarChart3 className="w-5 h-5" />,
-    title: "Optimize",
-    desc: "Measure what's working & double down with insights.",
-  },
 ];
 
 function LandingPage() {

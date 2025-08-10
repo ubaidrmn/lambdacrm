@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import type { SidebarItem } from "@/components/shared/AppSidebar/types"
 import { getSidebarItems } from "./constants";
-import { Building2Icon, ChevronDown, ChevronUp, LogOutIcon, PlusIcon, SettingsIcon, User2 } from "lucide-react";
+import { Building2Icon, ChevronDown, ChevronUp, LogOutIcon, PlusIcon, User2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

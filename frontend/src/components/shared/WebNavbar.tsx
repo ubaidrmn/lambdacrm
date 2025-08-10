@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Building2Icon, LogOutIcon, Menu, X, User, Workflow, Sparkles } from "lucide-react";
+import { Building2Icon, LogOutIcon, Menu, X, Workflow, Sparkles } from "lucide-react";
 import TokenService from "@/lib/token-service";
 import { useContext, useState } from "react";
 import AuthContext from "@/features/auth/context";

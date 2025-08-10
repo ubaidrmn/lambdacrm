@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Moon, PlusIcon, Sun, TrashIcon } from "lucide-react";
+import { Moon, Sun, TrashIcon } from "lucide-react";
 import SettingsPageBreadCrumb from "./SettingsPageBreadCrumb";
 import { Separator } from "@/components/ui/separator";
 import {
