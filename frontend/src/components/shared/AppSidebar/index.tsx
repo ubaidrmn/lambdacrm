@@ -21,6 +21,7 @@ import type { UserOrganization } from "@/types/user.model";
 import TokenService from "@/lib/token-service";
 import { useQuery } from "@tanstack/react-query";
 import { getUserOrganizationsApi } from "@/features/web/api";
+import { useMemo } from "react";
 
 function AppSidebar() {
   const params = useParams();
@@ -30,6 +31,14 @@ function AppSidebar() {
     initialData: []
   })
 
+  const activeOrganization = useMemo(() => {
+    let orgName = organizations.data?.filter(org => org.organizationId === params.organizationId)[0]?.organization?.title || "Error";
+    if (orgName.length > 20) {
+      orgName = `${orgName.slice(0, 20)}...`
+    }
+    return orgName;
+  }, [params, organizations])
+
   return (
     <Sidebar>
     <SidebarHeader>
@@ -38,7 +47,7 @@ function AppSidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton>
-                <Building2Icon /> {organizations.data?.filter(org => org.organizationId === params.organizationId)[0]?.organization?.title || "Error"}
+                <Building2Icon /> {activeOrganization}
                 <ChevronDown className="ml-auto" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
