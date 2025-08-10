@@ -1,9 +1,6 @@
-import * as http from "http";
-import { handler } from ".";
-import { parse } from 'url';
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-const createMockEvent = (path: string, method: string, body: string): APIGatewayProxyEvent => {
+export const createMockEvent = (path: string, method: string, body: string): APIGatewayProxyEvent => {
     return {
         body: body,
         headers: {},
@@ -48,39 +45,3 @@ const createMockEvent = (path: string, method: string, body: string): APIGateway
         },
     };
 }
-
-const server = http.createServer(async (req: any, res: any) => {
-    let body = '';
-
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Or restrict to a domain
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-
-    // Handle preflight (OPTIONS) request
-    if (req.method === 'OPTIONS') {
-        res.writeHead(204); // No Content
-        res.end();
-        return;
-    }
-
-    req.on('data', (chunk: any) => {
-        body += chunk.toString();;
-    });
-    
-    req.on('end', async () => {
-        const parsedUrl = parse(req.url || '', true);
-        const path = parsedUrl.pathname;
-        if (path) {
-            const response = await handler(createMockEvent(path, req.method, body));
-            res.writeHead(response.statusCode, { 'Content-Type': 'application/json' });
-            res.end(response.body);
-        } else {
-            res.end("An error occured!")
-        }
-    })
-});
-
-const PORT = 3000;
-server.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
