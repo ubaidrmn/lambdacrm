@@ -4,8 +4,9 @@
   "description": "Backend Lambda functions for LambdaCRM",
   "scripts": {
     "build": "tspc",
+    "deployment-build": "node build.js",
     "test": "jest",
-    "dev": "nodemon"
+    "dev": "export LAMBDA_CRM_DEV=TRUE && nodemon"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.857.0",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.0",
     "@types/node": "^20.0.0",
+    "esbuild": "^0.25.8",
     "ts-node": "^10.9.2",
     "ts-patch": "^3.3.0",
     "typescript": "^5.0.0",
