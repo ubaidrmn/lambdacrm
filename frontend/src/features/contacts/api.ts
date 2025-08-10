@@ -18,7 +18,7 @@ export async function getContactsApi(
 export async function createContactApi(
   contact: CreateContactRequestData
 ): Promise<Contact> {
-  const response = await apiClient("/contacts/", {
+  const response = await apiClient("/contacts", {
     method: "POST",
     body: contact,
   });

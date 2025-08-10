@@ -13,7 +13,7 @@ export async function getLeadsApi(organizationId: string): Promise<Lead[]> {
 export async function createLeadApi(
   lead: CreateLeadRequestData
 ): Promise<Lead> {
-  const response = await apiClient("/leads/", { method: "POST", body: lead });
+  const response = await apiClient("/leads", { method: "POST", body: lead });
   const data = await response.json();
   return data?.data as Lead;
 }
