@@ -1,6 +1,6 @@
 import LeadsDataTable from "@/features/leads/components/LeadsDataTable";
 import AddLeadSheet from "./AddLeadSheet";
-import LeadsPageBreadcrumb from "./LeadsPageBreadcrumb";
+import LeadsPageBreadCrumb from "./LeadsPageBreadCrumb";
 import { getLeadsApi } from "@/features/leads/api";
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -42,7 +42,7 @@ function LeadsPage() {
 
   return (
     <>
-      <LeadsPageBreadcrumb />
+      <LeadsPageBreadCrumb />
       <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight mt-2">
         Leads
       </h2>

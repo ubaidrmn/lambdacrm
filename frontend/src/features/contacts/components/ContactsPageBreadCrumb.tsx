@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Link, useParams } from "react-router";
 
-function ContactsPageBreadcrumb() {
+function ContactsPageBreadCrumb() {
   const params: any = useParams();
 
   return (
@@ -34,4 +34,4 @@ function ContactsPageBreadcrumb() {
   );
 }
 
-export default ContactsPageBreadcrumb;
+export default ContactsPageBreadCrumb;

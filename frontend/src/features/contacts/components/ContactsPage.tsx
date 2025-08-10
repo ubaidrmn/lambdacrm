@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getContactsApi } from "../api";
-import ContactsPageBreadcrumb from "./ContactsPageBreadcrumb";
+import ContactsPageBreadCrumb from "./ContactsPageBreadCrumb";
 import AddContactSheet from "./AddContactSheet";
 import { ContactsDataTable } from "./ContactsDataTable";
 import { getLeadsApi } from "@/features/leads/api";
@@ -57,7 +57,7 @@ function ContactsPage() {
 
   return (
     <>
-      <ContactsPageBreadcrumb />
+      <ContactsPageBreadCrumb />
       <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight mt-2">
         Contacts
       </h2>

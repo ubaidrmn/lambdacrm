@@ -118,12 +118,6 @@ function AppSidebar() {
                     <span>Organizations</span>
                   </DropdownMenuItem>
                 </Link>
-                {/* <Link to="/app/organizations/settings">
-                  <DropdownMenuItem>
-                    <SettingsIcon />
-                    <span>Settings</span>
-                  </DropdownMenuItem>
-                </Link> */}
                 <DropdownMenuItem onClick={() => {
                   const ts = new TokenService();
                   ts.deleteTokens();

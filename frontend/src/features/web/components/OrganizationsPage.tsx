@@ -17,7 +17,8 @@ export default function OrganizationsPage() {
   const organizations = useQuery({
     queryKey: ["get-organizations"],
     queryFn: getUserOrganizationsApi,
-    initialData: []
+    initialData: [],
+    retry: 2
   })
 
   return (

@@ -1,7 +1,7 @@
 import DashboardPage from "@/features/dashboard/DashboardPage";
 import LeadsPage from "@/features/leads/components/LeadsPage";
 import ContactsPage from "@/features/contacts/components/ContactsPage";
-import SettingsPage from "@/features/settings/SettingsPage";
+import SettingsPage from "@/features/settings/components/SettingsPage";
 import LoginPage from "@/features/auth/components/LoginPage";
 import AppLayout from "@/components/shared/AppLayout";
 import ThemeProvider from "@/components/shared/ThemeProvider";
@@ -48,7 +48,7 @@ function App() {
               }
             />
             <Route
-              path="/app/organizations/:organizationIdsettings"
+              path="/app/organizations/:organizationId/settings"
               element={
                 <AppLayout>
                   <SettingsPage />

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Link, useParams } from "react-router";
 
-function LeadsPageBreadcrumb() {
+function LeadsPageBreadCrumb() {
   const params: any = useParams();
 
   return (
@@ -34,4 +34,4 @@ function LeadsPageBreadcrumb() {
   );
 }
 
-export default LeadsPageBreadcrumb;
+export default LeadsPageBreadCrumb;

@@ -1,10 +1,10 @@
 import DashboardLeadStatusBarChart from "./DashboardLeadStatusBarChart";
-import DashboardPageBreadcrumb from "./DashboardPageBreadcrumb";
+import DashboardPageBreadCrumb from "./DashboardPageBreadCrumb";
 
 const DashboardPage = () => {
     return (
         <>
-            <DashboardPageBreadcrumb />
+            <DashboardPageBreadCrumb />
             <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight mt-2">
                 Dashboard
             </h2>

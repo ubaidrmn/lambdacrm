@@ -68,7 +68,6 @@ function AddLeadSheet() {
       };
 
       const mutationResponse = await createLeadMutation.mutate(data);
-      queryClient.invalidateQueries(["get-leads"] as any);
       return mutationResponse;
     },
     validationSchema: CreateLeadSchema,

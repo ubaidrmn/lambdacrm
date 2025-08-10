@@ -1,13 +1,11 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, XAxis, YAxis } from "recharts"
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -21,7 +19,7 @@ import { useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { getLeadsApi } from "../leads/api"
 import { useParams } from "react-router"
-import { LeadStatus, type Lead } from "@/types/lead.model"
+import { LeadStatus } from "@/types/lead.model"
 
 export const description = "A horizontal bar chart"
 

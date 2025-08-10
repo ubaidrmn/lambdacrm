@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Link } from "react-router";
 
-function DashboardPageBreadcrumb() {
+function DashboardPageBreadCrumb() {
   return (
     <Breadcrumb>
         <BreadcrumbList>
@@ -17,4 +17,4 @@ function DashboardPageBreadcrumb() {
   );
 }
 
-export default DashboardPageBreadcrumb;
+export default DashboardPageBreadCrumb;
