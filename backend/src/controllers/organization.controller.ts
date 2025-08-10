@@ -4,6 +4,8 @@ import { RegisterRoute } from "@/lib/decorators";
 import {
   CreateOrganizationRequestBodyType,
   CreateOrganizationRequestBody,
+  AddOrganizationMemberRequestBody,
+  AddOrganizationMemberRequestBodyType,
 } from "@/schemas/organization.schemas";
 import OrganizationService from "@/services/organization.service";
 import { UUID_REGEX } from "@/lib/regex";
@@ -36,7 +38,6 @@ export default class OrganizationController {
   @RegisterRoute({
     pattern: RegExp(`^/organizations/(?<id>${UUID_REGEX})/users/?$`),
     method: RouteMethod.GET,
-    requestBodySchema: CreateOrganizationRequestBody,
   })
   async getOrganizationUsers(
     request: AppRouteRequest
@@ -56,6 +57,36 @@ export default class OrganizationController {
       statusCode: 200,
       body: JSON.stringify({
         data: members,
+      }),
+    };
+  }
+
+  @RegisterRoute({
+    pattern: RegExp(`^/organizations/(?<id>${UUID_REGEX})/add-member/?$`),
+    method: RouteMethod.POST,
+    requestBodySchema: AddOrganizationMemberRequestBody,
+  })
+  async addOrganizationMember(
+    request: AppRouteRequest
+  ): Promise<APIGatewayProxyResult> {
+    const orgService = new OrganizationService();
+    const body = request.body as unknown as AddOrganizationMemberRequestBodyType;
+
+    if (!request?.params?.id) {
+      throw new AppError("Organization ID is required!");
+    }
+
+    await orgService.addOrganizationMember({      
+      organizationId: request?.params?.id,
+      email: body.email,
+      user: request.authenticatedUser,
+      role: body.role
+    });
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "Member added successfuly!",
       }),
     };
   }

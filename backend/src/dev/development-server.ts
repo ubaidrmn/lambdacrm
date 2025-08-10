@@ -24,7 +24,7 @@ const server = http.createServer(async (req: any, res: any) => {
         const parsedUrl = parse(req.url || '', true);
         const path = parsedUrl.pathname;
         if (path) {
-            const response = await handler(createMockEvent(path, req.method, body));
+            const response = await handler(createMockEvent(path, req.method, body, req.headers));
             res.writeHead(response.statusCode, { 'Content-Type': 'application/json' });
             res.end(response.body);
         } else {

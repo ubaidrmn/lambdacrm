@@ -27,6 +27,7 @@ export enum UserActions {
   DELETE_CONTACT = "DELETE_CONTACT",
 
   READ_ORGANIZATION_MEMBERS = "READ_ORGANIZATION_MEMBERS",
+  ADD_ORGANIZATION_MEMBERS = "ADD_ORGANIZATION_MEMBERS",
 }
 
 export const defineAbilitiesFor = (user: User) => {
@@ -63,6 +64,10 @@ export const defineAbilitiesFor = (user: User) => {
   // Organization
 
   can(UserActions.READ_ORGANIZATION_MEMBERS, SubjectType.USER_ORGANIZATION, { userId: user.id });
+  
+  elevatedRoles.forEach(role => {
+    can(UserActions.ADD_ORGANIZATION_MEMBERS, SubjectType.USER_ORGANIZATION, { userId: user.id, role: role });
+  });
 
   return build();
 };

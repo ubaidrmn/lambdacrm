@@ -1,5 +1,6 @@
 import LambdaCRMDatabase from "@/lib/database";
-import { OrganizationMember } from "@/types/organization.model";
+import { OrganizationMember, OrganizationRole } from "@/types/organization.model";
+import { PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 export default class OrganizationMemberRepository {
@@ -31,6 +32,31 @@ export default class OrganizationMemberRepository {
       }
     })
 
+  }
+
+  async addOrganizationMember(memberId: string, organizationId: string, role: OrganizationRole): Promise<OrganizationMember> {
+    const db = LambdaCRMDatabase.getInstance();
+
+    const organizationMember: OrganizationMember = {
+      memberId: memberId,
+      organizationId: organizationId,
+      role: role
+    }
+
+    const item: any = {
+      PK: { S: organizationId },
+      SK: { S: memberId },
+      role: { S: role },
+    }
+
+    const command = new PutItemCommand({
+      TableName: db.tableName,
+      Item: item
+    });
+
+    await db.client.send(command);
+
+    return organizationMember;
   }
 
 }

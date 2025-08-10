@@ -1,7 +1,8 @@
 import LambdaCRMDatabase from "@/lib/database";
+import { AppError } from "@/lib/errors";
 import { OrganizationRole } from "@/types/organization.model";
 import { UserOrganization } from "@/types/user.model";
-import { GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 export default class UserOrganizationRepository {
@@ -50,7 +51,7 @@ export default class UserOrganizationRepository {
     const userOrganization = userOrganizationsResponse.Item;
 
     if (!userOrganization) {
-      throw new Error(`Organization not found for userId: ${userId} and organizationId: ${organizationId}`);
+      throw new AppError(`Organization not found for userId: ${userId} and organizationId: ${organizationId}`, 404);
     }
 
     return {
@@ -59,6 +60,31 @@ export default class UserOrganizationRepository {
       role: userOrganization.role.S! as OrganizationRole
     }
 
+  }
+
+  async addUserOrganization(userId: string, organizationId: string, role: OrganizationRole): Promise<UserOrganization> {
+    const db = LambdaCRMDatabase.getInstance();
+
+    const userOrg: UserOrganization = {
+      userId: userId,
+      organizationId: organizationId,
+      role: role
+    }
+
+    const item: any = {
+      PK: { S: userId },
+      SK: { S: organizationId },
+      role: { S: role },
+    }
+
+    const command = new PutItemCommand({
+      TableName: db.tableName,
+      Item: item
+    });
+
+    await db.client.send(command);
+
+    return userOrg;
   }
 
 }

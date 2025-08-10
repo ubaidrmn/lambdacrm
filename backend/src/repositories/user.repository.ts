@@ -1,11 +1,42 @@
 import LambdaCRMDatabase from "@/lib/database";
-import { UserNotFoundError } from "@/lib/errors";
+import { AppError, UserNotFoundError } from "@/lib/errors";
 import { OrganizationMember } from "@/types/organization.model";
 import { User } from "@/types/user.model";
 import { AttributeValue, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { BatchGetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 export default class UserRepository {
+
+  async findByEmail(email: string): Promise<User> {
+    const db = LambdaCRMDatabase.getInstance();
+
+    const command = new QueryCommand({
+      TableName: db.tableName,
+      IndexName: "EmailIndex", // GSI
+      KeyConditionExpression: "email = :email",
+      ExpressionAttributeValues: {
+        ":email": email,
+      },
+      Limit: 1, // since email should be unique
+    });
+
+    const response = await db.client.send(command);
+
+    const item = response.Items?.[0];
+    if (!item) {
+      throw new AppError(`User not found!`);
+    }
+
+    const user: User = {
+      id: item.PK,
+      email: item.email,
+      name: item.name,
+      verified: item.verified,
+      picture: item.picture || undefined,
+    };
+
+    return user;
+}
 
   async findById(id: string): Promise<User> {
     const db = LambdaCRMDatabase.getInstance();
