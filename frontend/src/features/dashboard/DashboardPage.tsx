@@ -1,4 +1,4 @@
-import { DashboardAreaChart } from "./DashboardAreaChart";
+import DashboardLeadStatusBarChart from "./DashboardLeadStatusBarChart";
 import DashboardPageBreadcrumb from "./DashboardPageBreadcrumb";
 
 const DashboardPage = () => {
@@ -11,7 +11,7 @@ const DashboardPage = () => {
             <p className="leading-7 mt-2 mb-2">
                 Welcome to your dashboard. Here you can get an overview of your CRM activities, including leads, contacts, and settings.
             </p>
-            <DashboardAreaChart />
+            <DashboardLeadStatusBarChart />
         </>
     );
 }

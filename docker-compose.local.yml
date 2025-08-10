@@ -10,11 +10,5 @@ services:
     working_dir: /home/dynamodblocal
     user: root
 
-  # cognito-local:
-  #   image: jagregory/cognito-local:latest
-  #   ports:
-  #     - "9229:9229"
-
-
 volumes:
   dynamo_data:
