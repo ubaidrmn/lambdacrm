@@ -45,7 +45,6 @@ function SignUpPage() {
                 user: userInstance,
                 verificationRequired: true,
                 verificationEmail: formik.values.email,
-                loading: false
             })
             formik.setSubmitting(false);
             navigate("/signup/confirm")

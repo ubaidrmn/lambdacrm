@@ -30,7 +30,7 @@ function ConfirmUserPage() {
 
             // If the user signed up and then went away without verifying, then came back from login page
             // This will be set in the AuthContextProvider.
-            navigate("/signup")
+            navigate("/login")
         }
     }, [auth.auth.user]);
 
@@ -58,6 +58,12 @@ function ConfirmUserPage() {
                 description: "Login to start using LambdaCRM."
             });
             formik.setSubmitting(false);
+            auth.setAuth({
+                isAuthenticated: false,
+                user: null,
+                verificationRequired: false,
+                verificationEmail: undefined,
+            })
             navigate("/login");
         },
         onError: (error) => {
