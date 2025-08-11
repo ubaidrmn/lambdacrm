@@ -1,8 +1,22 @@
-# LambdaCRM
+<p align="center">
+  <img style="height: 100px;" alt="LambdaCRM Logo" src="public/logo.png">
+</p>
+<p align="center">
+  <a href="https://nodejs.org/">
+    <img src="https://img.shields.io/badge/node.js-%23339933.svg?style=flat&logo=node.js&logoColor=white" alt="Node.js" />
+  </a>
+  <a href="https://aws.amazon.com/">
+    <img src="https://img.shields.io/badge/AWS-%23232F3E.svg?style=flat&logo=amazon-aws&logoColor=white" alt="AWS" />
+  </a>
+  <a href="https://reactjs.org/">
+    <img src="https://img.shields.io/badge/React-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB" alt="React" />
+  </a>
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" alt="TypeScript" />
+  </a>
+</p>
 
-A lightweight serverless CRM built on AWS Lambda, API Gateway, and DynamoDB. This project consists of a TypeScript backend with an AWS Lambda function, a React frontend with modern UI components, and AWS CDK for infrastructure as code.
-
-*This project is still under development so this document may not be updated to reflect the most recent changes.*
+<p align="center"><b>LambdaCRM</b> is a lightweight, serverless CRM built on AWS. It helps teams manage leads, clients, deals, and tasks effortlessly</p>
 
 ## 🏗️ Architecture
 
@@ -53,43 +67,8 @@ lambdacrm/
 
 3. **Build and deploy**
    ```bash
-   # Build backend
-   cd backend
-   npm run build
-
-   # Deploy infrastructure
-   cd ../cdk
-   cdk deploy
+   node cdk-deploy.js
    ```
-
-4. **Build and deploy frontend**
-   ```bash
-   cd frontend
-   npm run build
-   # Upload build/ directory to S3 or your hosting service
-   ```
-
-## 🧪 Testing
-
-Tests will be added soon.
-
-```bash
-# Backend tests
-cd backend
-npm test
-
-# Frontend tests (if configured)
-cd frontend
-npm test
-
-# CDK tests
-cd cdk
-npm test
-```
-
-## 📝 Environment Variables
-
-Look at the sample `.env.sample` files in each major directory.
 
 ## 🤝 Contributing
 
