@@ -21,9 +21,11 @@ import type { UserOrganization } from "@/types/user.model";
 import TokenService from "@/lib/token-service";
 import { useQuery } from "@tanstack/react-query";
 import { getUserOrganizationsApi } from "@/features/web/api";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
+import AuthContext from "@/features/auth/context";
 
 function AppSidebar() {
+  const authContext = useContext(AuthContext);
   const params = useParams();
   const organizations = useQuery({
     queryKey: ["get-organizations"],
@@ -104,7 +106,7 @@ function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Ubaid Ur Rehman
+                  <User2 /> {authContext.auth.user?.name}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
