@@ -16,7 +16,7 @@
   </a>
 </p>
 
-<p align="center"><b>LambdaCRM</b> is a lightweight, serverless CRM built on AWS. It helps teams manage leads, clients, deals, and tasks effortlessly</p>
+<p align="center"><b>LambdaCRM</b> is a lightweight, serverless CRM powered by AWS, designed to help teams effortlessly manage leads, clients, deals, and tasks.</p>
 
 ## 🏗️ Architecture
 
