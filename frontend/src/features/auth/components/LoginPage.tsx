@@ -63,17 +63,17 @@ function LoginPage() {
         <>
         <WebNavbar />
         <div className="flex items-center justify-center h-screen -mt-[80px]">
-            <form className="w-full max-w-sm" onSubmit={formik.handleSubmit}>
-                <Card className="w-full max-w-sm">
-                    <CardHeader>
-                        <CardTitle>Login to your account</CardTitle>
-                        <CardDescription>Enter your email below to login to your account.</CardDescription>
-                        <CardAction>
-                        <Link to="/signup">
-                            <Button>Sign Up</Button>
-                        </Link>
-                        </CardAction>
-                    </CardHeader>
+            <Card className="w-full max-w-sm">
+                <CardHeader>
+                    <CardTitle>Login to your account</CardTitle>
+                    <CardDescription>Enter your email below to login to your account.</CardDescription>
+                    <CardAction>
+                    <Link to="/signup">
+                        <Button type="button">Sign Up</Button>
+                    </Link>
+                    </CardAction>
+                </CardHeader>
+                <form onSubmit={formik.handleSubmit}>
                     <CardContent>
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-2">
@@ -108,8 +108,8 @@ function LoginPage() {
                     <CardFooter className="flex-col gap-2">
                         <Button disabled={formik.isSubmitting} type="submit" className="w-full">Login</Button>
                     </CardFooter>
-                </Card>
-            </form>
+                </form>
+            </Card>
         </div>
         </>
     );
